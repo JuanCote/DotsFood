@@ -29,8 +29,9 @@ class StartCommandHandler
     public function handle(Command $command)
     {
         $message = $command->getUpdate()->getMessage();
-        $check_phone = $this->check_phone($message);
 
+        // Checking if the user has a phone number in db
+        $check_phone = $this->check_phone($message);
         if(!$check_phone){
             $inline_keyboard = [
                 [['text' => 'Поділитись контактом', 'request_contact' => true, 'callback_data' => 'receive_contact']],
@@ -44,14 +45,13 @@ class StartCommandHandler
         }else{
             app(CitySender::class)->handle($message);
         }
-
-
     }
 
     private function check_phone(Message $message) : bool
     {
         $telegram_id = $message->from->id;
         $user = $this->userService->findUserByTelegramId($telegram_id);
+        // Checking for the existence of a user
         if (!$user){
             $data = [
                 'name' => $message->from->first_name,

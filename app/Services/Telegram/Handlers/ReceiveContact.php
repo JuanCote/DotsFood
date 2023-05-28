@@ -11,6 +11,7 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\Update;
 
+// Class for getting a contact and adding a phone to the database
 class ReceiveContact
 {
 
