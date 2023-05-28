@@ -19,7 +19,7 @@ class ReceiveContact
     private $userService;
 
     public function __construct(
-        DotsService $dotsService,
+        DotsService   $dotsService,
         UsersService $userService,
     ) {
         $this->dotsService = $dotsService;

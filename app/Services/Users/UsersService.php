@@ -4,6 +4,7 @@ namespace App\Services\Users;
 
 
 use App\Models\User;
+use App\Services\Orders\Handlers\CreateOrderHandler;
 use App\Services\Users\Handlers\CreateUserHandler;
 use App\Services\Users\Handlers\UpdateUserHandler;
 use App\Services\Users\Repositories\EloquentUserRepository;
@@ -16,8 +17,8 @@ class UsersService
     private $userRepository;
 
     public function __construct(
-        CreateUserHandler $createUserHandler,
-        UpdateUserHandler $updateUserHandler,
+        CreateUserHandler      $createUserHandler,
+        UpdateUserHandler      $updateUserHandler,
         EloquentUserRepository $userRepository
     )
     {

@@ -5,7 +5,7 @@ namespace App\Services\Telegram\Senders;
 
 
 use App\Services\Dots\DotsService;
-use App\Services\Users\UsersService;
+use App\Services\Users\OrdersService;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;

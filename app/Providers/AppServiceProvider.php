@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Services\Dots\DotsService;
-use App\Services\Users\UsersService;
+use App\Services\Users\OrdersService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
