@@ -18,9 +18,14 @@ class DotsProvider extends HttpClient
         return config('services.dots.host');
     }
 
-    public function getCities()
+    public function getCities(): array
     {
-        $response = $this->get('api/v2/cities?v=2.0.0');
-        return $response;
+        return $this->get('api/v2/cities?v=2.0.0');
+    }
+
+    public function getCompanies(string $cityId): array
+    {
+        return $this->get("api/v2/cities/$cityId/companies?v=2.0.0");
+
     }
 }

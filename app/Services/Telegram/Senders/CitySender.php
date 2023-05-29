@@ -24,7 +24,7 @@ class CitySender
     public function handle(Message $message)
     {
         $telegram_id = $message->from->id;
-        $keyboard = $this->getCitiesKeyboard();
+        $keyboard = $this->generateCitiesKeyboard();
         Telegram::sendMessage([
             'chat_id' => $telegram_id,
             'text' => "Оберіть місто у якому бажаєте створити замовлення",
@@ -32,7 +32,7 @@ class CitySender
         ]);
     }
 
-    private function getCitiesKeyboard(): Keyboard
+    private function generateCitiesKeyboard(): Keyboard
     {
         $inline_keyboard = [];
         $cities = $this->dotsService->getCities();

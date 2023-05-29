@@ -27,5 +27,8 @@ class DotsService
         return $this->dotsProvider->getCities();
     }
 
-
+    public function getCompanies(string $cityId): array
+    {
+        return $this->dotsProvider->getCompanies($cityId);
+    }
 }

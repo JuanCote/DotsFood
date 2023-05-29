@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Bots;
 
 use App\Http\Controllers\Controller;
 use App\Services\Telegram\Callbacks\CityCallback;
+use App\Services\Telegram\Callbacks\CompanyCallback;
 use App\Services\Telegram\Handlers\ReceiveContact;
 use Telegram\Bot\Api;
 
@@ -27,10 +28,11 @@ class TelegramController extends Controller
                     $callback_query = $update->callbackQuery;
                     $data = $callback_query->data;
                     if (str_starts_with($data, 'city_')) {
-                        $callbackHandler = new CityCallback();
-                        $callbackHandler->handle($callback_query);
+                        app(CityCallback::class)->handle($callback_query);
+                    }elseif (str_starts_with($data, 'company_')){
+                        app(CompanyCallback::class)->handle($callback_query);
                     }
-                // Checking if update is an incoming contact after receiving
+                    // Checking if update is an incoming contact after receiving
                 }elseif (isset($update->getMessage()->contact)){
                     app(ReceiveContact::class)->handle($update);
                 }

@@ -3,6 +3,7 @@
 namespace App\Services\Telegram\Handlers\Commands;
 
 
+use App\Models\User;
 use App\Services\Dots\DotsService;
 use App\Services\Telegram\Callbacks\CityCallback;
 use App\Services\Telegram\Senders\CitySender;

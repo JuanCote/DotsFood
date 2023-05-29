@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->longText('items')->nullable();
             $table->string('city_id')->nullable();
+            $table->string('company_id')->nullable();
             $table->string('userName');
             $table->string('userPhone');
             $table->string('address')->nullable();
