@@ -12,7 +12,7 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\CallbackQuery;
 
 
-class CompanyCallback
+class DishCallback
 {
 
     private $userService;
@@ -30,25 +30,26 @@ class CompanyCallback
     public function handle(CallbackQuery $callbackQuery)
     {
         $callbackData = $callbackQuery->getData();
-        $company_id = $this->getCompanyIdFromData($callbackData);
+        $dish_id = $this->getDishFromData($callbackData);
         $chat_id = $callbackQuery->message->chat->id;
         $user = $this->userService->findUserByTelegramId($chat_id);
-        $this->addCompanyToOrder($company_id, $user);
-        app(CategorySender::class)->handle($callbackQuery->message, $company_id);
+        $this->addDishToOrder($dish_id, $user);
     }
 
-    private function getCompanyIdFromData(string $callbackData): string
+    private function getDishFromData(string $callbackData): string
     {
         $array = explode('_', $callbackData);
         return end($array);
     }
-    private function addCompanyToOrder(string $companyId, User $user)
+
+    private function addDishToOrder($dish_id, $user)
     {
+        $items = $user->order->items;
+        $items[] = $dish_id;
+
         $this->orderService->updateOrder($user->order, [
-            'user_id' => $user->id,
-            'company_id' => $companyId,
-            'userName' => $user->name,
-            'userPhone' => $user->phone
+            'items' => $items
         ]);
     }
+
 }

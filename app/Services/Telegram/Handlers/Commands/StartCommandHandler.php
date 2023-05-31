@@ -10,6 +10,7 @@ use App\Services\Telegram\Senders\CitySender;
 use App\Services\Users\UsersService;
 use Telegram\Bot\Commands\Command;
 use Telegram\Bot\Keyboard\Keyboard;
+use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;
 
 
@@ -29,8 +30,7 @@ class StartCommandHandler
 
     public function handle(Command $command)
     {
-        $message = $command->getUpdate()->getMessage();
-
+        $message = $command->getUpdate()->message;
         // Checking if the user has a phone number in db
         $check_phone = $this->check_phone($message);
         if(!$check_phone){
@@ -42,24 +42,27 @@ class StartCommandHandler
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true,
             ]);
-            $command->replyWithMessage(['text' => 'Будь ласка, поділіться своїм номером телефону', 'reply_markup' => $reply_markup]);
+            Telegram::sendMessage([
+                'chat_id' => $message->chat->id,
+                'text' => 'Будь ласка, поділіться своїм номером телефону',
+                'reply_markup' => $reply_markup
+            ]);
         }else{
-            app(CitySender::class)->handle($message);
+            app(CitySender::class)->handle($message, false);
         }
     }
 
     private function check_phone(Message $message) : bool
     {
-        $telegram_id = $message->from->id;
+        $telegram_id = $message->chat->id;
         $user = $this->userService->findUserByTelegramId($telegram_id);
         // Checking for the existence of a user
         if (!$user){
             $data = [
-                'name' => $message->from->first_name,
-                'phone' => $message->from->null,
+                'name' => $message->chat->first_name,
                 'telegram_id' => $telegram_id
             ];
-            $user = $this->userService->createUser($data);
+            $this->userService->createUser($data);
             return false;
         }else{
             if ($user->phone !== null){

@@ -31,4 +31,8 @@ class DotsService
     {
         return $this->dotsProvider->getCompanies($cityId);
     }
+    public function getDishes(string $companyId): array
+    {
+        return $this->dotsProvider->getDishes($companyId);
+    }
 }

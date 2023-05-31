@@ -30,7 +30,6 @@ class CityCallback
     public function handle(CallbackQuery $callbackQuery)
     {
         $callbackData = $callbackQuery->getData();
-        $message_id = $callbackQuery->message->message_id;
         $chat_id = $callbackQuery->message->chat->id;
         $cityId = $this->getCityIdFromData($callbackData);
         $user = $this->userService->findUserByTelegramId($chat_id);

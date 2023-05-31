@@ -4,8 +4,13 @@
 namespace App\Http\Controllers\Bots;
 
 use App\Http\Controllers\Controller;
+use App\Services\Telegram\Callbacks\CategoryCallback;
 use App\Services\Telegram\Callbacks\CityCallback;
 use App\Services\Telegram\Callbacks\CompanyCallback;
+use App\Services\Telegram\Callbacks\DeclineCallback;
+use App\Services\Telegram\Callbacks\DishCallback;
+use App\Services\Telegram\Commands\StartCommand;
+use App\Services\Telegram\Handlers\Commands\StartCommandHandler;
 use App\Services\Telegram\Handlers\ReceiveContact;
 use Telegram\Bot\Api;
 
@@ -31,6 +36,12 @@ class TelegramController extends Controller
                         app(CityCallback::class)->handle($callback_query);
                     }elseif (str_starts_with($data, 'company_')){
                         app(CompanyCallback::class)->handle($callback_query);
+                    }elseif (str_starts_with($data, '/decline')){
+                        app(DeclineCallback::class)->handle($callback_query);
+                    }elseif (str_starts_with($data, 'category_')) {
+                        app(CategoryCallback::class)->handle($callback_query);
+                    }elseif (str_starts_with($data, 'dish_')){
+                        app(DishCallback::class)->handle($callback_query);
                     }
                     // Checking if update is an incoming contact after receiving
                 }elseif (isset($update->getMessage()->contact)){

@@ -9,6 +9,7 @@ namespace App\Services\Dots\Providers;
 
 
 use App\Services\Http\HttpClient;
+use function Symfony\Component\ErrorHandler\Tests\testHeader;
 
 class DotsProvider extends HttpClient
 {
@@ -27,5 +28,9 @@ class DotsProvider extends HttpClient
     {
         return $this->get("api/v2/cities/$cityId/companies?v=2.0.0");
 
+    }
+    public function getDishes(string $companyId): array
+    {
+        return $this->get("api/v2/companies/$companyId/items-by-categories?v=2.0.0");
     }
 }
