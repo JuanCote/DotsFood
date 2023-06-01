@@ -2,7 +2,6 @@
 
 namespace App\Services\Telegram\Senders;
 
-
 use App\Models\User;
 use App\Services\Dots\DotsService;
 use App\Services\Orders\OrdersService;
@@ -10,7 +9,7 @@ use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;
 
-class CategorySender
+class PaymentTypeSender
 {
     private $dotsService;
 
@@ -20,30 +19,29 @@ class CategorySender
         $this->dotsService = $dotsService;
     }
 // Message $message, User $user, string $cityId
-    public function handle(Message $message, string $companyId)
+    public function handle(Message $message, User $user)
     {
-        $categories = $this->dotsService->getDishes($companyId);
-        $keyboard = $this->generateCategoriesKeyboard($categories);
-        dump($keyboard);
+        $keyboard = $this->generatePaymentTypesKeyboard();
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,
             'message_id' => $message->message_id,
-            'text' => "Оберіть категорію",
+            'text' => "Виберіть тип оплати",
             'reply_markup' => $keyboard,
         ]);
     }
 
-    private function generateCategoriesKeyboard(array $categories): Keyboard
+    private function generatePaymentTypesKeyboard(): Keyboard
     {
-        $inline_keyboard = [];
-        foreach ($categories['items'] as $category){
-            $inline_keyboard[] = [
-                'text' => $category['name'],
-                'callback_data' => 'category_' . $category['id']
-            ];
-        }
-        $inline_keyboard = array_chunk($inline_keyboard, 2);
-        $inline_keyboard[] = [['text' => 'Скасувати', 'callback_data' => '/decline']];
+        $inline_keyboard = [
+            [
+                ['text' => 'Готівкою', 'callback_data' => 'payment_' . 1],
+                ['text' => 'Онлайн', 'callback_data' => 'payment_' . 2],
+                ['text' => 'Термінал', 'callback_data' => 'payment_' . 3],
+            ],
+            [
+                ['text' => 'Скасувати', 'callback_data' => '/decline'],
+            ]
+        ];
         return $reply_markup = new Keyboard([
             'inline_keyboard' => $inline_keyboard,
             'resize_keyboard' => true,

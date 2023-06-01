@@ -2,7 +2,6 @@
 
 namespace App\Services\Telegram\Senders;
 
-
 use App\Models\User;
 use App\Services\Dots\DotsService;
 use App\Services\Orders\OrdersService;
@@ -46,16 +45,16 @@ class DishSender
                 }
             }
         }
-        $inline_keyboard = array_chunk($inline_keyboard, 4);
+        $inline_keyboard = array_chunk($inline_keyboard, 2);
         $inline_keyboard[] = [
             ['text' => 'Скасувати', 'callback_data' => '/decline'],
-            ['text' => 'Категорії', 'callback_data' => 'company_' . $company_id]
+            ['text' => 'Категорії', 'callback_data' => 'company_' . $company_id],
+            ['text' => 'Замовити', 'callback_data' => 'delivery']
         ];
         return $reply_markup = new Keyboard([
             'inline_keyboard' => $inline_keyboard,
             'resize_keyboard' => true,
             'one_time_keyboard' => true
         ]);
-
     }
 }

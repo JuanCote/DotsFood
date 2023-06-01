@@ -10,7 +10,7 @@ use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;
 
-class CompanySender
+class DeliveryTypesSender
 {
     private $dotsService;
 
@@ -20,25 +20,25 @@ class CompanySender
         $this->dotsService = $dotsService;
     }
 
-    public function handle(Message $message, User $user, string $cityId)
+    public function handle(Message $message, User $user)
     {
-        $companies = $this->dotsService->getCompanies($cityId);
-        $keyboard = $this->generateCompaniesKeyboard($companies);
+        $delivery_types = $this->dotsService->getDeliveryTypes($user->order->company_id);
+        $keyboard = $this->generateDeliveryTypesKeyboard($delivery_types);
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,
             'message_id' => $message->message_id,
-            'text' => "Оберіть компанію у якій бажаєте створити замовлення",
+            'text' => "Оберіть тип доставки",
             'reply_markup' => $keyboard,
         ]);
     }
 
-    private function generateCompaniesKeyboard($companies): Keyboard
+    private function generateDeliveryTypesKeyboard($types): Keyboard
     {
         $inline_keyboard = [];
-        foreach ($companies['items'] as $company){
+        foreach ($types['items'] as $type){
             $inline_keyboard[] = [
-                'text' => $company['name'],
-                'callback_data' => 'company_' . $company['id']
+                'text' => $type['title'],
+                'callback_data' => 'delivery_type_' . $type['type']
             ];
         }
         $inline_keyboard = array_chunk($inline_keyboard, 2);

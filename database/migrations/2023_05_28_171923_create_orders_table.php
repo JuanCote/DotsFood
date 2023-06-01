@@ -20,10 +20,11 @@ return new class extends Migration
             $table->longText('items')->nullable();
             $table->string('city_id')->nullable();
             $table->string('company_id')->nullable();
+            $table->integer('delivery_type')->nullable();
             $table->string('userName');
             $table->string('userPhone');
             $table->string('address')->nullable();
-            $table->string('paymentUrl')->nullable();
+            $table->string('payment_type')->nullable();
         });
     }
 

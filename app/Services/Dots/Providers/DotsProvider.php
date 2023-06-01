@@ -33,4 +33,9 @@ class DotsProvider extends HttpClient
     {
         return $this->get("api/v2/companies/$companyId/items-by-categories?v=2.0.0");
     }
+
+    public function getDeliveryTypes(string $companyId): array
+    {
+        return $this->get("api/v2/companies/$companyId/delivery-types?v=2.0.0");
+    }
 }

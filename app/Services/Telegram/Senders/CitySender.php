@@ -61,7 +61,7 @@ class CitySender
                 'callback_data' => 'city_' . $city['id']
             ];
         }
-        $inline_keyboard = array_chunk($inline_keyboard, 4);
+        $inline_keyboard = array_chunk($inline_keyboard, 2);
         return $reply_markup = new Keyboard([
             'inline_keyboard' => $inline_keyboard,
             'resize_keyboard' => true,
@@ -76,7 +76,8 @@ class CitySender
         $this->ordersService->updateOrder($user->order, [
             'city_id' => null,
             'company_id' => null,
-            'items' => null
+            'items' => null,
+            'delivery_type' => null,
         ]);
     }
 

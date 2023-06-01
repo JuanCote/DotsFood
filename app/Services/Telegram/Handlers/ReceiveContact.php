@@ -40,7 +40,7 @@ class ReceiveContact
             $this->addOrderToUser($user);
         }
 
-        app(CitySender::class)->handle($message);
+        app(CitySender::class)->handle($message, false);
     }
 
     private function addPhoneToUser(User $user, Message $message)
