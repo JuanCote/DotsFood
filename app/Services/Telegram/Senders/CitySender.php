@@ -78,6 +78,7 @@ class CitySender
             'company_id' => null,
             'items' => null,
             'delivery_type' => null,
+            'payment_type' => null,
         ]);
     }
 

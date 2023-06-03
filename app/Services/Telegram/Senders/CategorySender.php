@@ -24,11 +24,10 @@ class CategorySender
     {
         $categories = $this->dotsService->getDishes($companyId);
         $keyboard = $this->generateCategoriesKeyboard($categories);
-        dump($keyboard);
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,
             'message_id' => $message->message_id,
-            'text' => "Оберіть категорію",
+            'text' => 'Оберіть категорію',
             'reply_markup' => $keyboard,
         ]);
     }
@@ -43,7 +42,10 @@ class CategorySender
             ];
         }
         $inline_keyboard = array_chunk($inline_keyboard, 2);
-        $inline_keyboard[] = [['text' => 'Скасувати', 'callback_data' => '/decline']];
+        $inline_keyboard[] = [
+            ['text' => 'Скасувати', 'callback_data' => '/decline'],
+            ['text' => 'Замовити', 'callback_data' => 'delivery']
+        ];
         return $reply_markup = new Keyboard([
             'inline_keyboard' => $inline_keyboard,
             'resize_keyboard' => true,

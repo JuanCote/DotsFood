@@ -11,6 +11,7 @@ use App\Services\Telegram\Senders\DishSender;
 use App\Services\Users\UsersService;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\CallbackQuery;
+use function PHPUnit\Framework\isEmpty;
 
 
 class DeliveryCallback
@@ -30,8 +31,26 @@ class DeliveryCallback
     }
     public function handle(CallbackQuery $callbackQuery)
     {
+
         $message = $callbackQuery->message;
         $user = $this->userService->findUserByTelegramId($message->chat->id);
-        app(DeliveryTypesSender::class)->handle($message, $user);
+        if ($this->checkForEmptinessItems($user)){
+            Telegram::answerCallbackQuery([
+                'callback_query_id' => $callbackQuery->id,
+                'text' => 'Неможливо створювати порожнє замовлення',
+                'show_alert' => true,
+            ]);
+        }else{
+            app(DeliveryTypesSender::class)->handle($message, $user);
+        }
+    }
+
+    private function checkForEmptinessItems(User $user): bool
+    {
+        if (!$user->order->items){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
