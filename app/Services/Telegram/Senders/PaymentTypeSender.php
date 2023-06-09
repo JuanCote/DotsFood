@@ -18,7 +18,6 @@ class PaymentTypeSender
     ) {
         $this->dotsService = $dotsService;
     }
-// Message $message, User $user, string $cityId
     public function handle(Message $message, User $user)
     {
         $keyboard = $this->generatePaymentTypesKeyboard();

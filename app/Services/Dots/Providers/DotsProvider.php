@@ -38,4 +38,9 @@ class DotsProvider extends HttpClient
     {
         return $this->get("api/v2/companies/$companyId/delivery-types?v=2.0.0");
     }
+    public function createOrder(array $orderObject): array
+    {
+        $response = $this->post('/api/v2/orders?v=2.0.0', $orderObject);
+        return $response;
+    }
 }

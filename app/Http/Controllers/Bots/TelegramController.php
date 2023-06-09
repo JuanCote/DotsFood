@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Bots;
 
 use App\Http\Controllers\Controller;
 use App\Services\Telegram\Callbacks\CategoryCallback;
+use App\Services\Telegram\Callbacks\CheckOrderCallback;
 use App\Services\Telegram\Callbacks\CityCallback;
 use App\Services\Telegram\Callbacks\CompanyCallback;
+use App\Services\Telegram\Callbacks\CreateNewOrderCallback;
 use App\Services\Telegram\Callbacks\DeclineCallback;
 use App\Services\Telegram\Callbacks\DeliveryCallback;
 use App\Services\Telegram\Callbacks\DeliveryTypeCallback;
@@ -16,6 +18,7 @@ use App\Services\Telegram\Commands\StartCommand;
 use App\Services\Telegram\Handlers\Commands\StartCommandHandler;
 use App\Services\Telegram\Handlers\ReceiveContact;
 use Telegram\Bot\Api;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramController extends Controller
 {
@@ -47,7 +50,11 @@ class TelegramController extends Controller
                         app(DishCallback::class)->handle($callback_query);
                     }elseif ($data === 'delivery') {
                         app(DeliveryCallback::class)->handle($callback_query);
-                    }elseif (str_starts_with($data, 'delivery_type_')) {
+                    }elseif ($data === 'create_order') {
+                        app(CreateNewOrderCallback::class)->handle($callback_query);
+                    }elseif (str_starts_with($data, 'check_order_')) {
+                        app(CheckOrderCallback::class)->handle($callback_query);
+                    } elseif (str_starts_with($data, 'delivery_type_')) {
                         app(DeliveryTypeCallback::class)->handle($callback_query);
                     }elseif (str_starts_with($data, 'payment_')) {
                         app(PaymentTypeCallback::class)->handle($callback_query);
