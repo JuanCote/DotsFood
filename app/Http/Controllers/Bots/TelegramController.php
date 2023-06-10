@@ -17,8 +17,10 @@ use App\Services\Telegram\Callbacks\PaymentTypeCallback;
 use App\Services\Telegram\Commands\StartCommand;
 use App\Services\Telegram\Handlers\Commands\StartCommandHandler;
 use App\Services\Telegram\Handlers\ReceiveContact;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use function Symfony\Component\Translation\t;
 
 class TelegramController extends Controller
 {
@@ -31,43 +33,39 @@ class TelegramController extends Controller
 
     public function updates()
     {
-        $updates = $this->telegram->getUpdates();
-        if (!empty($updates)) {
-            foreach ($updates as $update) {
-                // Checking if update is a callback or not
-                if ($update->ObjectType() === "callback_query") {
-                    $callback_query = $update->callbackQuery;
-                    $data = $callback_query->data;
-                    if (str_starts_with($data, 'city_')) {
-                        app(CityCallback::class)->handle($callback_query);
-                    }elseif (str_starts_with($data, 'company_')){
-                        app(CompanyCallback::class)->handle($callback_query);
-                    }elseif (str_starts_with($data, '/decline')){
-                        app(DeclineCallback::class)->handle($callback_query);
-                    }elseif (str_starts_with($data, 'category_')) {
-                        app(CategoryCallback::class)->handle($callback_query);
-                    }elseif (str_starts_with($data, 'dish_')){
-                        app(DishCallback::class)->handle($callback_query);
-                    }elseif ($data === 'delivery') {
-                        app(DeliveryCallback::class)->handle($callback_query);
-                    }elseif ($data === 'create_order') {
-                        app(CreateNewOrderCallback::class)->handle($callback_query);
-                    }elseif (str_starts_with($data, 'check_order_')) {
-                        app(CheckOrderCallback::class)->handle($callback_query);
-                    } elseif (str_starts_with($data, 'delivery_type_')) {
-                        app(DeliveryTypeCallback::class)->handle($callback_query);
-                    }elseif (str_starts_with($data, 'payment_')) {
-                        app(PaymentTypeCallback::class)->handle($callback_query);
-                    }
-                    // Checking if update is an incoming contact after receiving
-                }elseif (isset($update->getMessage()->contact)){
-                    app(ReceiveContact::class)->handle($update);
+        $update = $this->telegram->getWebhookUpdate();
+        if (!empty($update)) {
+            // Checking if update is a callback or not
+            if ($update->callbackQuery) {
+                $callback_query = $update->callbackQuery;
+                $data = $callback_query->data;
+                if (str_starts_with($data, 'city_')) {
+                    app(CityCallback::class)->handle($callback_query);
+                }elseif (str_starts_with($data, 'company_')){
+                    app(CompanyCallback::class)->handle($callback_query);
+                }elseif (str_starts_with($data, '/decline')){
+                    app(DeclineCallback::class)->handle($callback_query);
+                }elseif (str_starts_with($data, 'category_')) {
+                    app(CategoryCallback::class)->handle($callback_query);
+                }elseif (str_starts_with($data, 'dish_')){
+                    app(DishCallback::class)->handle($callback_query);
+                }elseif ($data === 'delivery') {
+                    app(DeliveryCallback::class)->handle($callback_query);
+                }elseif ($data === 'create_order') {
+                    app(CreateNewOrderCallback::class)->handle($callback_query);
+                }elseif (str_starts_with($data, 'check_order_')) {
+                    app(CheckOrderCallback::class)->handle($callback_query);
+                } elseif (str_starts_with($data, 'delivery_type_')) {
+                    app(DeliveryTypeCallback::class)->handle($callback_query);
+                }elseif (str_starts_with($data, 'payment_')) {
+                    app(PaymentTypeCallback::class)->handle($callback_query);
                 }
+                // Checking if update is an incoming contact after receiving
+            }elseif (isset($update->getMessage()->contact)){
+                app(ReceiveContact::class)->handle($update);
             }
         }
-        $this->telegram->commandsHandler(false);
-
-
+        $this->telegram->commandsHandler(true);
 
         return 'Ok';
     }

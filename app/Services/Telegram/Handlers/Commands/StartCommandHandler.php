@@ -8,6 +8,7 @@ use App\Services\Dots\DotsService;
 use App\Services\Telegram\Callbacks\CityCallback;
 use App\Services\Telegram\Senders\CitySender;
 use App\Services\Users\UsersService;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Commands\Command;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;

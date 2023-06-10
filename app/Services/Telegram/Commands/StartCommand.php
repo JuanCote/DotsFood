@@ -3,6 +3,7 @@
 namespace App\Services\Telegram\Commands;
 
 use App\Services\Telegram\Handlers\Commands\StartCommandHandler;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Commands\Command;
 
 class StartCommand extends Command

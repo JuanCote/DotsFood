@@ -34,6 +34,11 @@ class DishCallback
         $chat_id = $callbackQuery->message->chat->id;
         $user = $this->userService->findUserByTelegramId($chat_id);
         $this->addDishToOrder($dish_id, $user);
+        Telegram::answerCallbackQuery([
+            'callback_query_id' => $callbackQuery->id,
+            'text' => 'Додано у корзину',
+            'show_alert' => true,
+        ]);
     }
 
     private function getDishFromData(string $callbackData): string
