@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Telegram\Callbacks\CategoryCallback;
 use App\Services\Telegram\Callbacks\CheckOrderCallback;
 use App\Services\Telegram\Callbacks\CityCallback;
+use App\Services\Telegram\Callbacks\CompanyAddressCallback;
 use App\Services\Telegram\Callbacks\CompanyCallback;
 use App\Services\Telegram\Callbacks\CreateNewOrderCallback;
 use App\Services\Telegram\Callbacks\DeclineCallback;
@@ -59,6 +60,8 @@ class TelegramController extends Controller
                     app(DeliveryTypeCallback::class)->handle($callback_query);
                 }elseif (str_starts_with($data, 'payment_')) {
                     app(PaymentTypeCallback::class)->handle($callback_query);
+                }elseif (str_starts_with($data, 'companyAddress_')) {
+                    app(CompanyAddressCallback::class)->handle($callback_query);
                 }
                 // Checking if update is an incoming contact after receiving
             }elseif (isset($update->getMessage()->contact)){

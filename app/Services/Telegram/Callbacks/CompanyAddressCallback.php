@@ -6,8 +6,6 @@ use App\Models\User;
 use App\Services\Dots\DotsService;
 use App\Services\Orders\OrdersService;
 use App\Services\Telegram\Senders\CategorySender;
-use App\Services\Telegram\Senders\CompanyAddressesSender;
-use App\Services\Telegram\Senders\DeliveryTypesSender;
 use App\Services\Telegram\Senders\DishSender;
 use App\Services\Telegram\Senders\PaymentTypeSender;
 use App\Services\Users\UsersService;
@@ -16,7 +14,7 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\CallbackQuery;
 
 
-class DeliveryTypeCallback
+class CompanyAddressCallback
 {
 
     private $userService;
@@ -34,25 +32,22 @@ class DeliveryTypeCallback
     public function handle(CallbackQuery $callbackQuery)
     {
         $callbackData = $callbackQuery->getData();
-        (int)$delivery_type = $this->getDeliveryTypeFromData($callbackData);
-        $user = $this->userService->findUserByTelegramId($callbackQuery->message->chat->id);
-        $this->addDeliveryTypeToOrder($delivery_type, $user);
-        if (!in_array($delivery_type, [0, 1])){
-            app(CompanyAddressesSender::class)->handle($callbackQuery->message, $user);
-        }else{
-            app(PaymentTypeSender::class)->handle($callbackQuery->message, $user);
-        }
+        $company_address = $this->getCompanyAddressFromData($callbackData);
+        $chat_id = $callbackQuery->message->chat->id;
+        $user = $this->userService->findUserByTelegramId($chat_id);
+        $this->addCompanyAddressToOrder($company_address, $user);
+        app(PaymentTypeSender::class)->handle($callbackQuery->message, $user);
     }
 
-    private function getDeliveryTypeFromData(string $callbackData): string
+    private function getCompanyAddressFromData(string $callbackData): string
     {
         $array = explode('_', $callbackData);
         return end($array);
     }
-    private function addDeliveryTypeToOrder(int $delivery_type, User $user)
+    private function addCompanyAddressToOrder(string $company_address_id, User $user)
     {
         $this->orderService->updateOrder($user->order, [
-            'delivery_type' => $delivery_type
+            'company_address' => $company_address_id
         ]);
     }
 }

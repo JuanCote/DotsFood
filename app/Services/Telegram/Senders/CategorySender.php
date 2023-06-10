@@ -19,7 +19,6 @@ class CategorySender
     ) {
         $this->dotsService = $dotsService;
     }
-// Message $message, User $user, string $cityId
     public function handle(Message $message, string $companyId)
     {
         $categories = $this->dotsService->getDishes($companyId);

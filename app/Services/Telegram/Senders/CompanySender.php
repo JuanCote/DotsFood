@@ -27,7 +27,7 @@ class CompanySender
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,
             'message_id' => $message->message_id,
-            'text' => "Оберіть компанію у якій бажаєте створити замовлення",
+            'text' => "Оберіть компанію в якій бажаєте створити замовлення",
             'reply_markup' => $keyboard,
         ]);
     }

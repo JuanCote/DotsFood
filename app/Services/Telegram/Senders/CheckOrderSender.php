@@ -2,6 +2,7 @@
 
 namespace App\Services\Telegram\Senders;
 
+
 use App\Models\User;
 use App\Services\Dots\DotsService;
 use App\Services\Orders\OrdersService;
@@ -10,7 +11,7 @@ use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;
 
-class PaymentTypeSender
+class CheckOrderSender
 {
     private $dotsService;
 
@@ -19,29 +20,28 @@ class PaymentTypeSender
     ) {
         $this->dotsService = $dotsService;
     }
-    public function handle(Message $message, User $user)
+    public function handle(Message $message, array $order_info)
     {
-        $keyboard = $this->generatePaymentTypesKeyboard();
+        Log::info($order_info);
+        $text = "Назва компанії - {$order_info['companyName']}\n
+Тип доставки - {$order_info['delivery']['deliveryTypeText']}\n
+Адреса закладу - {$order_info['delivery']['deliveryAddress']}\n
+Тип оплати - {$order_info['payment']['title']}\n
+Загальна ціна - {$order_info['prices']['fullPrice']}";
+        $keyboard = $this->generateKeyboard();
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,
             'message_id' => $message->message_id,
-            'text' => "Виберіть тип оплати",
+            'text' => $text,
             'reply_markup' => $keyboard,
         ]);
     }
 
-    private function generatePaymentTypesKeyboard(): Keyboard
+    private function generateKeyboard(): Keyboard
     {
-        $inline_keyboard = [
-            [
-                ['text' => 'Готівкою', 'callback_data' => 'payment_' . 1],
-                ['text' => 'Онлайн', 'callback_data' => 'payment_' . 2],
-                ['text' => 'Термінал', 'callback_data' => 'payment_' . 3],
-            ],
-            [
-                ['text' => 'Скасувати', 'callback_data' => '/decline'],
-            ]
-        ];
+        $inline_keyboard = [[
+            ['text' => 'Створити нове замовлення', 'callback_data' => 'create_order'],
+        ]];
         return $reply_markup = new Keyboard([
             'inline_keyboard' => $inline_keyboard,
             'resize_keyboard' => true,

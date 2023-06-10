@@ -9,6 +9,7 @@ namespace App\Services\Dots\Providers;
 
 
 use App\Services\Http\HttpClient;
+use Illuminate\Support\Facades\Log;
 use function Symfony\Component\ErrorHandler\Tests\testHeader;
 
 class DotsProvider extends HttpClient
@@ -42,5 +43,13 @@ class DotsProvider extends HttpClient
     {
         $response = $this->post('/api/v2/orders?v=2.0.0', $orderObject);
         return $response;
+    }
+    public function getCompanyInfo(string $companyId): array
+    {
+        return $this->get("api/v2/companies/$companyId?v=2.0.0");
+    }
+    public function checkOrder(string $orderId): array
+    {
+        return $this->get("api/v2/orders/$orderId?v=2.0.0");
     }
 }

@@ -45,10 +45,7 @@ class CompanyCallback
     private function addCompanyToOrder(string $companyId, User $user)
     {
         $this->orderService->updateOrder($user->order, [
-            'user_id' => $user->id,
             'company_id' => $companyId,
-            'userName' => $user->name,
-            'userPhone' => $user->phone
         ]);
     }
 }

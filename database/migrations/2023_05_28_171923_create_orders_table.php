@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('delivery_type')->nullable();
             $table->string('userName');
             $table->string('userPhone');
-            $table->string('address')->nullable();
+            $table->string('company_address')->nullable();
             $table->string('payment_type')->nullable();
         });
     }

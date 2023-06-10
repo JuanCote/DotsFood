@@ -10,6 +10,7 @@ namespace App\Services\Dots;
 
 use App\Models\User;
 use App\Services\Dots\Providers\DotsProvider;
+use Illuminate\Support\Facades\Log;
 
 
 class DotsService
@@ -56,6 +57,18 @@ class DotsService
                 'cartItems' => $order->items
             ]
         ];
+        if (!in_array($order->delivery_type, [0, 1])){
+            $orderObject['orderFields']['companyAddressId'] = $order->company_address;
+        }
         return $this->dotsProvider->createOrder($orderObject);
+    }
+    public function getCompanyAddresses(string $companyId): array
+    {
+        $addresses = $this->dotsProvider->getCompanyInfo($companyId)['addresses'];
+        return $addresses;
+    }
+    public function checkOrder(string $orderId): array
+    {
+        return $this->dotsProvider->checkOrder($orderId);
     }
 }

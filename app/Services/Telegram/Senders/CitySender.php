@@ -39,13 +39,13 @@ class CitySender
             Telegram::editMessageText([
                 'chat_id' => $telegram_id,
                 'message_id' => $message->message_id,
-                'text' => "Оберіть місто у якому бажаєте створити замовлення",
+                'text' => "Оберіть місто в якому бажаєте створити замовлення",
                 'reply_markup' => $keyboard,
             ]);
         }else{
             Telegram::sendMessage([
                 'chat_id' => $telegram_id,
-                'text' => "Оберіть місто у якому бажаєте створити замовлення",
+                'text' => "Оберіть місто в якому бажаєте створити замовлення",
                 'reply_markup' => $keyboard,
             ]);
         }
