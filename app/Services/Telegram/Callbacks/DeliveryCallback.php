@@ -37,7 +37,7 @@ class DeliveryCallback
         if ($this->checkForEmptinessItems($user)){
             Telegram::answerCallbackQuery([
                 'callback_query_id' => $callbackQuery->id,
-                'text' => 'Неможливо створювати порожнє замовлення',
+                'text' => 'An empty order cannot be created',
                 'show_alert' => true,
             ]);
         }else{

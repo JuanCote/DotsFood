@@ -30,13 +30,13 @@ class DishCallback
     public function handle(CallbackQuery $callbackQuery)
     {
         $callbackData = $callbackQuery->getData();
-        $dish_id = $this->getDishFromData($callbackData);
-        $chat_id = $callbackQuery->message->chat->id;
-        $user = $this->userService->findUserByTelegramId($chat_id);
-        $this->addDishToOrder($dish_id, $user);
+        $dishId = $this->getDishFromData($callbackData);
+        $chatId = $callbackQuery->message->chat->id;
+        $user = $this->userService->findUserByTelegramId($chatId);
+        $this->addDishToOrder($dishId, $user);
         Telegram::answerCallbackQuery([
             'callback_query_id' => $callbackQuery->id,
-            'text' => 'Додано у корзину',
+            'text' => 'Added to cart',
             'show_alert' => true,
         ]);
     }
@@ -47,11 +47,11 @@ class DishCallback
         return end($array);
     }
 
-    private function addDishToOrder(string $dish_id, User $user)
+    private function addDishToOrder(string $dishId, User $user)
     {
         $items = $user->order->items;
         $items[] = [
-            'id' => $dish_id,
+            'id' => $dishId,
             'count' => 1
         ];
 

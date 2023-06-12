@@ -25,25 +25,25 @@ class PaymentTypeSender
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,
             'message_id' => $message->message_id,
-            'text' => "Виберіть тип оплати",
+            'text' => "Select the payment type",
             'reply_markup' => $keyboard,
         ]);
     }
 
     private function generatePaymentTypesKeyboard(): Keyboard
     {
-        $inline_keyboard = [
+        $inlineKeyboard = [
             [
-                ['text' => 'Готівкою', 'callback_data' => 'payment_' . 1],
-                ['text' => 'Онлайн', 'callback_data' => 'payment_' . 2],
-                ['text' => 'Термінал', 'callback_data' => 'payment_' . 3],
+                ['text' => 'In cash', 'callback_data' => 'payment_' . 1],
+                ['text' => 'Online', 'callback_data' => 'payment_' . 2],
+                ['text' => 'Terminal', 'callback_data' => 'payment_' . 3],
             ],
             [
-                ['text' => 'Скасувати', 'callback_data' => '/decline'],
+                ['text' => 'Decline', 'callback_data' => '/decline'],
             ]
         ];
-        return $reply_markup = new Keyboard([
-            'inline_keyboard' => $inline_keyboard,
+        return new Keyboard([
+            'inline_keyboard' => $inlineKeyboard,
             'resize_keyboard' => true,
             'one_time_keyboard' => true
         ]);

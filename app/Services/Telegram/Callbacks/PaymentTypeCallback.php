@@ -5,6 +5,7 @@ namespace App\Services\Telegram\Callbacks;
 use App\Models\User;
 use App\Services\Dots\DotsService;
 use App\Services\Orders\OrdersService;
+use App\Services\Telegram\Senders\CartCheckoutSender;
 use App\Services\Telegram\Senders\CategorySender;
 use App\Services\Telegram\Senders\DishSender;
 use App\Services\Telegram\Senders\SuccessStoreOrderSender;
@@ -32,12 +33,11 @@ class PaymentTypeCallback
     public function handle(CallbackQuery $callbackQuery)
     {
         $callbackData = $callbackQuery->getData();
-        (int)$payment_type = $this->getPaymentTypeFromData($callbackData);
-        $chat_id = $callbackQuery->message->chat->id;
-        $user = $this->userService->findUserByTelegramId($chat_id);
-        $this->addPaymentTypeToOrder($payment_type, $user);
-        $orderResult = $this->createOrder($chat_id);
-        app(SuccessStoreOrderSender::class)->handle($callbackQuery->message, $orderResult);
+        (int)$paymentType = $this->getPaymentTypeFromData($callbackData);
+        $chatId = $callbackQuery->message->chat->id;
+        $user = $this->userService->findUserByTelegramId($chatId);
+        $this->addPaymentTypeToOrder($paymentType, $user);
+        app(CartCheckoutSender::class)->handle($callbackQuery->message);
     }
 
     private function getPaymentTypeFromData(string $callbackData): string
@@ -46,15 +46,10 @@ class PaymentTypeCallback
         return end($array);
     }
 
-    private function addPaymentTypeToOrder(int $payment_type, User $user)
+    private function addPaymentTypeToOrder(int $paymentType, User $user)
     {
         $this->orderService->updateOrder($user->order, [
-            'payment_type' => $payment_type
+            'payment_type' => $paymentType
         ]);
-    }
-    private function createOrder(int $telegramId): array
-    {
-        $user = $this->userService->findUserByTelegramId($telegramId);
-        return $this->dotsService->createOrder($user);
     }
 }

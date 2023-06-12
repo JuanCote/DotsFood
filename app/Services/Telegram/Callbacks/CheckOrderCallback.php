@@ -32,9 +32,9 @@ class CheckOrderCallback
     public function handle(CallbackQuery $callbackQuery)
     {
         $callbackData = $callbackQuery->getData();
-        $order_id = $this->getOrderIdFromData($callbackData);
-        $order_info = $this->dotsService->checkOrder($order_id);
-        app(CheckOrderSender::class)->handle($callbackQuery->message, $order_info);
+        $orderId = $this->getOrderIdFromData($callbackData);
+        $orderInfo = $this->dotsService->checkOrder($orderId);
+        app(CheckOrderSender::class)->handle($callbackQuery->message, $orderInfo);
     }
 
     private function getOrderIdFromData(string $callbackData): string

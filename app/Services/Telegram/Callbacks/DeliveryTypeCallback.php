@@ -34,10 +34,10 @@ class DeliveryTypeCallback
     public function handle(CallbackQuery $callbackQuery)
     {
         $callbackData = $callbackQuery->getData();
-        (int)$delivery_type = $this->getDeliveryTypeFromData($callbackData);
+        (int)$deliveryType = $this->getDeliveryTypeFromData($callbackData);
         $user = $this->userService->findUserByTelegramId($callbackQuery->message->chat->id);
-        $this->addDeliveryTypeToOrder($delivery_type, $user);
-        if (!in_array($delivery_type, [0, 1])){
+        $this->addDeliveryTypeToOrder($deliveryType, $user);
+        if (!in_array($deliveryType, [0, 1])){
             app(CompanyAddressesSender::class)->handle($callbackQuery->message, $user);
         }else{
             app(PaymentTypeSender::class)->handle($callbackQuery->message, $user);
@@ -49,10 +49,10 @@ class DeliveryTypeCallback
         $array = explode('_', $callbackData);
         return end($array);
     }
-    private function addDeliveryTypeToOrder(int $delivery_type, User $user)
+    private function addDeliveryTypeToOrder(int $deliveryType, User $user)
     {
         $this->orderService->updateOrder($user->order, [
-            'delivery_type' => $delivery_type
+            'delivery_type' => $deliveryType
         ]);
     }
 }

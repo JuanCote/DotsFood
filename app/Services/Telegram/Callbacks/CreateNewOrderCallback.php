@@ -30,8 +30,6 @@ class CreateNewOrderCallback
     }
     public function handle(CallbackQuery $callbackQuery)
     {
-        $message = $callbackQuery->message;
-        app(CitySender::class)->handle($message, true);
+        app(CitySender::class)->handle($callbackQuery->message);
     }
-
 }

@@ -22,29 +22,29 @@ class DeliveryTypesSender
 
     public function handle(Message $message, User $user)
     {
-        $delivery_types = $this->dotsService->getDeliveryTypes($user->order->company_id);
-        $keyboard = $this->generateDeliveryTypesKeyboard($delivery_types);
+        $deliveryTypes = $this->dotsService->getDeliveryTypes($user->order->company_id);
+        $keyboard = $this->generateDeliveryTypesKeyboard($deliveryTypes);
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,
             'message_id' => $message->message_id,
-            'text' => "Оберіть тип доставки",
+            'text' => "Choose the type of delivery",
             'reply_markup' => $keyboard,
         ]);
     }
 
     private function generateDeliveryTypesKeyboard($types): Keyboard
     {
-        $inline_keyboard = [];
+        $inlineKeyboard = [];
         foreach ($types['items'] as $type){
-            $inline_keyboard[] = [
+            $inlineKeyboard[] = [
                 'text' => $type['title'],
                 'callback_data' => 'delivery_type_' . $type['type']
             ];
         }
-        $inline_keyboard = array_chunk($inline_keyboard, 2);
-        $inline_keyboard[] = [['text' => 'Скасувати', 'callback_data' => '/decline']];
+        $inlineKeyboard = array_chunk($inlineKeyboard, 2);
+        $inlineKeyboard[] = [['text' => 'Decline', 'callback_data' => '/decline']];
         return $reply_markup = new Keyboard([
-            'inline_keyboard' => $inline_keyboard,
+            'inline_keyboard' => $inlineKeyboard,
             'resize_keyboard' => true,
             'one_time_keyboard' => true
         ]);

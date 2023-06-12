@@ -6,7 +6,9 @@ use App\Models\User;
 use App\Services\Dots\DotsService;
 use App\Services\Orders\OrdersService;
 use App\Services\Telegram\Senders\CitySender;
+use App\Services\Telegram\Senders\MainMenuSender;
 use App\Services\Users\UsersService;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;
@@ -32,24 +34,26 @@ class ReceiveContact
     public function handle(Update $update)
     {
         $message = $update->getMessage();
-        $telegram_id = $message->from->id;
-        $user = $this->userService->findUserByTelegramId($telegram_id);
+        $telegramId = $message->from->id;
+        $user = $this->userService->findUserByTelegramId($telegramId);
         $this->addPhoneToUser($user, $message);
-
         if (!$user->order){
             $this->addOrderToUser($user);
         }
-
-        app(CitySender::class)->handle($message, false);
+        if (!$user->dotsUserId){
+            $this->addDotsIdToUser($user, $message);
+        }
+        app(MainMenuSender::class)->handle($message, false);
     }
 
     private function addPhoneToUser(User $user, Message $message)
     {
-        $telegram_id = $message->from->id;
+        $telegramId = $message->from->id;
         $data = [
             'name' => $message->contact->first_name,
-            'phone' => $message->contact->phone_number,
-            'telegram_id' => $telegram_id
+            // Phone number is required without a plus sign
+            'phone' => substr($message->contact->phone_number, 1),
+            'telegram_id' => $telegramId
         ];
         $user = $this->userService->updateUser($user, $data);
     }
@@ -62,5 +66,12 @@ class ReceiveContact
             'userPhone' => $user->phone
         ]);
     }
-
+    private function addDotsIdToUser(User $user, Message $message)
+    {
+        // Phone number is required without a plus sign
+        $userStat = $this->dotsService->userStatByPhone(substr($message->contact->phoneNumber, 1));
+        $this->userService->updateUser($user, [
+           'dotsUserId' => $userStat["user"]["id"]
+        ]);
+    }
 }

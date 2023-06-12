@@ -27,24 +27,24 @@ class CompanySender
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,
             'message_id' => $message->message_id,
-            'text' => "Оберіть компанію в якій бажаєте створити замовлення",
+            'text' => "Choose the company in which you want to create an order",
             'reply_markup' => $keyboard,
         ]);
     }
 
     private function generateCompaniesKeyboard($companies): Keyboard
     {
-        $inline_keyboard = [];
+        $inlineKeyboard = [];
         foreach ($companies['items'] as $company){
-            $inline_keyboard[] = [
+            $inlineKeyboard[] = [
                 'text' => $company['name'],
                 'callback_data' => 'company_' . $company['id']
             ];
         }
-        $inline_keyboard = array_chunk($inline_keyboard, 2);
-        $inline_keyboard[] = [['text' => 'Скасувати', 'callback_data' => '/decline']];
-        return $reply_markup = new Keyboard([
-            'inline_keyboard' => $inline_keyboard,
+        $inlineKeyboard = array_chunk($inlineKeyboard, 2);
+        $inlineKeyboard[] = [['text' => 'Decline', 'callback_data' => '/decline']];
+        return new Keyboard([
+            'inline_keyboard' => $inlineKeyboard,
             'resize_keyboard' => true,
             'one_time_keyboard' => true
         ]);

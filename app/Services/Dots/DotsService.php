@@ -49,8 +49,7 @@ class DotsService
                 'cityId' => $order->city_id,
                 'companyId' => $order->company_id,
                 'userName' => $order->userName,
-                // The number in the database is stored with '+' and it is not needed in the request
-                'userPhone' => substr($order->userPhone, 1),
+                'userPhone' => $order->userPhone,
                 'deliveryType' => $order->delivery_type,
                 'paymentType' => $order->payment_type,
                 'deliveryTime' => 0,
@@ -70,5 +69,33 @@ class DotsService
     public function checkOrder(string $orderId): array
     {
         return $this->dotsProvider->checkOrder($orderId);
+    }
+    public function resolveCart(User $user): array
+    {
+        $order = $user->order;
+        $orderObject = [
+            'orderFields' => [
+                'cityId' => $order->city_id,
+                'companyId' => $order->company_id,
+                'userName' => $order->userName,
+                'userPhone' => $order->userPhone,
+                'deliveryType' => $order->delivery_type,
+                'paymentType' => $order->payment_type,
+                'deliveryTime' => 0,
+                'cartItems' => $order->items
+            ]
+        ];
+        if (!in_array($order->delivery_type, [0, 1])){
+            $orderObject['orderFields']['companyAddressId'] = $order->company_address;
+        }
+        return $this->dotsProvider->resolveCart($orderObject);
+    }
+    public function userStatByPhone(int $phoneNumber): array
+    {
+        return $this->dotsProvider->userStatByPhone($phoneNumber);
+    }
+    public function UserActiveOrders(string $dotsUserId): array
+    {
+        return $this->dotsProvider->UserActiveOrders($dotsUserId);
     }
 }

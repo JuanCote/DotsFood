@@ -4,16 +4,19 @@
 namespace App\Http\Controllers\Bots;
 
 use App\Http\Controllers\Controller;
+use App\Services\Telegram\Callbacks\ActiveOrdersCallback;
 use App\Services\Telegram\Callbacks\CategoryCallback;
 use App\Services\Telegram\Callbacks\CheckOrderCallback;
 use App\Services\Telegram\Callbacks\CityCallback;
 use App\Services\Telegram\Callbacks\CompanyAddressCallback;
 use App\Services\Telegram\Callbacks\CompanyCallback;
 use App\Services\Telegram\Callbacks\CreateNewOrderCallback;
+use App\Services\Telegram\Callbacks\MainMenuCallback;
 use App\Services\Telegram\Callbacks\DeclineCallback;
 use App\Services\Telegram\Callbacks\DeliveryCallback;
 use App\Services\Telegram\Callbacks\DeliveryTypeCallback;
 use App\Services\Telegram\Callbacks\DishCallback;
+use App\Services\Telegram\Callbacks\OrderAgreeCallback;
 use App\Services\Telegram\Callbacks\PaymentTypeCallback;
 use App\Services\Telegram\Commands\StartCommand;
 use App\Services\Telegram\Handlers\Commands\StartCommandHandler;
@@ -52,8 +55,14 @@ class TelegramController extends Controller
                     app(DishCallback::class)->handle($callback_query);
                 }elseif ($data === 'delivery') {
                     app(DeliveryCallback::class)->handle($callback_query);
+                }elseif ($data === 'main_menu') {
+                    app(MainMenuCallback::class)->handle($callback_query);
+                }elseif ($data === 'order_agree') {
+                    app(OrderAgreeCallback::class)->handle($callback_query);
                 }elseif ($data === 'create_order') {
                     app(CreateNewOrderCallback::class)->handle($callback_query);
+                }elseif ($data === 'active_orders') {
+                    app(ActiveOrdersCallback::class)->handle($callback_query);
                 }elseif (str_starts_with($data, 'check_order_')) {
                     app(CheckOrderCallback::class)->handle($callback_query);
                 } elseif (str_starts_with($data, 'delivery_type_')) {

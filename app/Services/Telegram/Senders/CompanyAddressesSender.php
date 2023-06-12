@@ -13,7 +13,6 @@ use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;
 
-// Class for sending a list of cities to the user
 class CompanyAddressesSender
 {
     private $dotsService;
@@ -32,30 +31,30 @@ class CompanyAddressesSender
 
     public function handle(Message $message, User $user)
     {
-        $telegram_id = $message->chat->id;
-        $company_id = $user->order->company_id;
-        $keyboard = $this->generateCompanyAddresses($company_id);
+        $telegramId = $message->chat->id;
+        $companyId = $user->order->company_id;
+        $keyboard = $this->generateCompanyAddresses($companyId);
         Telegram::editMessageText([
-            'chat_id' => $message->chat->id,
+            'chat_id' => $telegramId,
             'message_id' => $message->message_id,
-            'text' => "Виберіть адресу компанії в якому хочете отримати замовлення",
+            'text' => "Select the address of the company where you want to receive the order",
             'reply_markup' => $keyboard,
         ]);
     }
 
-    private function generateCompanyAddresses($company_id): Keyboard
+    private function generateCompanyAddresses($companyId): Keyboard
     {
-        $inline_keyboard = [];
-        $addresses = $this->dotsService->getCompanyAddresses($company_id);
+        $inlineKeyboard = [];
+        $addresses = $this->dotsService->getCompanyAddresses($companyId);
         foreach ($addresses as $address){
-            $inline_keyboard[] = [
+            $inlineKeyboard[] = [
                 'text' => $address['title'],
                 'callback_data' => 'companyAddress_' . $address['id']
             ];
         }
-        $inline_keyboard = array_chunk($inline_keyboard, 2);
-        return $reply_markup = new Keyboard([
-            'inline_keyboard' => $inline_keyboard,
+        $inlineKeyboard = array_chunk($inlineKeyboard, 2);
+        return new Keyboard([
+            'inline_keyboard' => $inlineKeyboard,
             'resize_keyboard' => true,
             'one_time_keyboard' => true
         ]);

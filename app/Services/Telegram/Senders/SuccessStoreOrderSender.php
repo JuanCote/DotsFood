@@ -22,15 +22,15 @@ class SuccessStoreOrderSender
     }
     public function handle(Message $message, array $orderResult)
     {
-        Log::info($orderResult);
         if (array_key_exists('title', $orderResult) and $orderResult['title'] === 'Oops...'){
-            $check_order = false;
-            $text = 'Вибрана компанія не працює  😞';
+            $checkOrder = false;
+            $text = 'Something went wrong  😞';
+            $text .= "\n{$orderResult['message']}";
         }else{
-            $check_order = true;
-            $text = 'Замовлення успішно створене 🥳';
+            $checkOrder = true;
+            $text = 'Order successfully created 🥳';
         }
-        $keyboard = $this->generateSuccessTypesKeyboard($orderResult, $check_order);
+        $keyboard = $this->generateSuccessTypesKeyboard($orderResult, $checkOrder);
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,
             'message_id' => $message->message_id,
@@ -39,18 +39,18 @@ class SuccessStoreOrderSender
         ]);
     }
 
-    private function generateSuccessTypesKeyboard(array $orderResult, bool $check_order): Keyboard
+    private function generateSuccessTypesKeyboard(array $orderResult, bool $checkOrder): Keyboard
     {
-        $inline_keyboard = [
+        $inlineKeyboard = [
             [
-                ['text' => 'Створити нове замовлення', 'callback_data' => 'create_order'],
+                ['text' => 'Back to menu', 'callback_data' => 'main_menu'],
             ],
         ];
-        if ($check_order){
-            $inline_keyboard[][0] = ['text' => 'Переглянути замовлення', 'callback_data' => 'check_order_' . $orderResult['id']];
+        if ($checkOrder){
+            $inlineKeyboard[][0] = ['text' => 'View order', 'callback_data' => 'check_order_' . $orderResult['id']];
         }
-        return $reply_markup = new Keyboard([
-            'inline_keyboard' => $inline_keyboard,
+        return new Keyboard([
+            'inline_keyboard' => $inlineKeyboard,
             'resize_keyboard' => true,
             'one_time_keyboard' => true
         ]);

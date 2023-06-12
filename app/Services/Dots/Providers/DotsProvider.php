@@ -41,8 +41,7 @@ class DotsProvider extends HttpClient
     }
     public function createOrder(array $orderObject): array
     {
-        $response = $this->post('/api/v2/orders?v=2.0.0', $orderObject);
-        return $response;
+        return $this->post('/api/v2/orders?v=2.0.0', $orderObject);
     }
     public function getCompanyInfo(string $companyId): array
     {
@@ -51,5 +50,17 @@ class DotsProvider extends HttpClient
     public function checkOrder(string $orderId): array
     {
         return $this->get("api/v2/orders/$orderId?v=2.0.0");
+    }
+    public function resolveCart(array $orderObject): array
+    {
+        return $this->post('api/v2/cart/prices/resolve?v=2.0.0', $orderObject);
+    }
+    public function userStatByPhone(int $phoneNumber): array
+    {
+        return $this->get("api/v2/users/statistics-by-phone?phone=$phoneNumber&v=2.0.0");
+    }
+    public function UserActiveOrders(string $dotsUserId): array
+    {
+        return $this->get("api/v2/users/$dotsUserId/orders/active?v=2.0.0");
     }
 }

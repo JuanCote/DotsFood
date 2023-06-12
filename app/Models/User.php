@@ -20,7 +20,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'phone',
-        'telegram_id'
+        'telegram_id',
+        'dotsUserId'
     ];
 
     /**

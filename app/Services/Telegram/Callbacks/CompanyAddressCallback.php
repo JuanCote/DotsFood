@@ -32,10 +32,10 @@ class CompanyAddressCallback
     public function handle(CallbackQuery $callbackQuery)
     {
         $callbackData = $callbackQuery->getData();
-        $company_address = $this->getCompanyAddressFromData($callbackData);
-        $chat_id = $callbackQuery->message->chat->id;
-        $user = $this->userService->findUserByTelegramId($chat_id);
-        $this->addCompanyAddressToOrder($company_address, $user);
+        $companyAddress = $this->getCompanyAddressFromData($callbackData);
+        $chatId = $callbackQuery->message->chat->id;
+        $user = $this->userService->findUserByTelegramId($chatId);
+        $this->addCompanyAddressToOrder($companyAddress, $user);
         app(PaymentTypeSender::class)->handle($callbackQuery->message, $user);
     }
 
@@ -44,10 +44,10 @@ class CompanyAddressCallback
         $array = explode('_', $callbackData);
         return end($array);
     }
-    private function addCompanyAddressToOrder(string $company_address_id, User $user)
+    private function addCompanyAddressToOrder(string $companyAddress_id, User $user)
     {
         $this->orderService->updateOrder($user->order, [
-            'company_address' => $company_address_id
+            'company_address' => $companyAddress_id
         ]);
     }
 }

@@ -30,11 +30,11 @@ class CompanyCallback
     public function handle(CallbackQuery $callbackQuery)
     {
         $callbackData = $callbackQuery->getData();
-        $company_id = $this->getCompanyIdFromData($callbackData);
-        $chat_id = $callbackQuery->message->chat->id;
-        $user = $this->userService->findUserByTelegramId($chat_id);
-        $this->addCompanyToOrder($company_id, $user);
-        app(CategorySender::class)->handle($callbackQuery->message, $company_id);
+        $companyId = $this->getCompanyIdFromData($callbackData);
+        $chatId = $callbackQuery->message->chat->id;
+        $user = $this->userService->findUserByTelegramId($chatId);
+        $this->addCompanyToOrder($companyId, $user);
+        app(CategorySender::class)->handle($callbackQuery->message, $companyId);
     }
 
     private function getCompanyIdFromData(string $callbackData): string

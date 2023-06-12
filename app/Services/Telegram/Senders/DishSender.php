@@ -4,7 +4,6 @@ namespace App\Services\Telegram\Senders;
 
 use App\Models\User;
 use App\Services\Dots\DotsService;
-use App\Services\Orders\OrdersService;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;
@@ -18,41 +17,40 @@ class DishSender
     ) {
         $this->dotsService = $dotsService;
     }
-// Message $message, User $user, string $cityId
-    public function handle(Message $message, string $category_id, User $user)
+    public function handle(Message $message, string $categoryId, User $user)
     {
-        $company_id = $user->order->company_id;
-        $categories = $this->dotsService->getDishes($company_id);
-        $keyboard = $this->generateDishesKeyboard($categories, $category_id, $company_id);
+        $companyId = $user->order->company_id;
+        $categories = $this->dotsService->getDishes($companyId);
+        $keyboard = $this->generateDishesKeyboard($categories, $categoryId, $companyId);
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,
             'message_id' => $message->message_id,
-            'text' => "Додавайте страви до корзини натискаючи на них",
+            'text' => "Add dishes to the cart by clicking on them",
             'reply_markup' => $keyboard,
         ]);
     }
 
-    private function generateDishesKeyboard(array $categories, string $category_id, string $company_id): Keyboard
+    private function generateDishesKeyboard(array $categories, string $categoryId, string $companyId): Keyboard
     {
-        $inline_keyboard = [];
+        $inlineKeyboard = [];
         foreach ($categories['items'] as $category){
-            if ($category['id'] === $category_id){
+            if ($category['id'] === $categoryId){
                 foreach ($category['items'] as $dish) {
-                    $inline_keyboard[] = [
+                    $inlineKeyboard[] = [
                         'text' => $dish['name'],
                         'callback_data' => 'dish_' . $dish['id']
                     ];
                 }
             }
         }
-        $inline_keyboard = array_chunk($inline_keyboard, 2);
-        $inline_keyboard[] = [
-            ['text' => 'Скасувати', 'callback_data' => '/decline'],
-            ['text' => 'Категорії', 'callback_data' => 'company_' . $company_id],
-            ['text' => 'Замовити', 'callback_data' => 'delivery']
+        $inlineKeyboard = array_chunk($inlineKeyboard, 2);
+        $inlineKeyboard[] = [
+            ['text' => 'Decline', 'callback_data' => '/decline'],
+            ['text' => 'Categories', 'callback_data' => 'company_' . $companyId],
+            ['text' => 'Order', 'callback_data' => 'delivery']
         ];
-        return $reply_markup = new Keyboard([
-            'inline_keyboard' => $inline_keyboard,
+        return new Keyboard([
+            'inline_keyboard' => $inlineKeyboard,
             'resize_keyboard' => true,
             'one_time_keyboard' => true
         ]);

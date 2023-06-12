@@ -22,12 +22,11 @@ class CheckOrderSender
     }
     public function handle(Message $message, array $order_info)
     {
-        Log::info($order_info);
-        $text = "Назва компанії - {$order_info['companyName']}\n
-Тип доставки - {$order_info['delivery']['deliveryTypeText']}\n
-Адреса закладу - {$order_info['delivery']['deliveryAddress']}\n
-Тип оплати - {$order_info['payment']['title']}\n
-Загальна ціна - {$order_info['prices']['fullPrice']}";
+        $text = "The company name - {$order_info['companyName']}\n
+Type of delivery - {$order_info['delivery']['deliveryTypeText']}\n
+Address of the institution - {$order_info['delivery']['deliveryAddress']}\n
+Payment type - {$order_info['payment']['title']}\n
+Total price - {$order_info['prices']['fullPrice']}";
         $keyboard = $this->generateKeyboard();
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,
@@ -39,11 +38,11 @@ class CheckOrderSender
 
     private function generateKeyboard(): Keyboard
     {
-        $inline_keyboard = [[
-            ['text' => 'Створити нове замовлення', 'callback_data' => 'create_order'],
+        $inlineKeyboard = [[
+            ['text' => 'Back to menu', 'callback_data' => 'main_menu'],
         ]];
-        return $reply_markup = new Keyboard([
-            'inline_keyboard' => $inline_keyboard,
+        return new Keyboard([
+            'inline_keyboard' => $inlineKeyboard,
             'resize_keyboard' => true,
             'one_time_keyboard' => true
         ]);

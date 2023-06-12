@@ -30,10 +30,10 @@ class CityCallback
     public function handle(CallbackQuery $callbackQuery)
     {
         $callbackData = $callbackQuery->getData();
-        $chat_id = $callbackQuery->message->chat->id;
+        $chatId = $callbackQuery->message->chat->id;
         $cityId = $this->getCityIdFromData($callbackData);
-        $user = $this->userService->findUserByTelegramId($chat_id);
-        // Change or add city_id to user`s order
+        $user = $this->userService->findUserByTelegramId($chatId);
+        // Change or add cityId to user`s order
         $this->addCityToOrder($cityId, $user);
         app(CompanySender::class)->handle($callbackQuery->message, $user, $cityId);
 

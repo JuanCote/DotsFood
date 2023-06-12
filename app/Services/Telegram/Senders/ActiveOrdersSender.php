@@ -4,15 +4,16 @@
 namespace App\Services\Telegram\Senders;
 
 
+use App\Models\User;
 use App\Services\Dots\DotsService;
 use App\Services\Orders\OrdersService;
 use App\Services\Users\UsersService;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;
 
-// Class for sending a list of cities to the user
-class CitySender
+class ActiveOrdersSender
 {
     private $dotsService;
     private $userService;
@@ -24,15 +25,26 @@ class CitySender
         UsersService $usersService,
     ) {
         $this->dotsService = $dotsService;
-        $this->usersService = $usersService;
+        $this->userService = $usersService;
         $this->ordersService = $ordersService;
     }
 
-    public function handle(Message $message)
+    public function handle(Message $message, array $activeOrders)
     {
+        $keyboard = $this->generateKeyboard();
         $telegramId = $message->chat->id;
-        $keyboard = $this->generateCitiesKeyboard();
-        $text = "Choose the city in which you want to create an order";
+        if (empty($activeOrders["items"])){
+            $text = "You don't have any active orders";
+        }else{
+            $text = "Your active orders:\n------------------------------\n";
+            foreach ($activeOrders["items"] as $order){
+                $text .= "The company name - {$order['companyName']}\n";
+                $text .= "Payment - {$order['paymentText']}\n";
+                $text .= "Status - {$order['status']['text']}\n";
+                $text .= "------------------------------\n";
+            }
+        }
+
         Telegram::editMessageText([
             'chat_id' => $telegramId,
             'message_id' => $message->message_id,
@@ -41,24 +53,16 @@ class CitySender
         ]);
     }
 
-    private function generateCitiesKeyboard(): Keyboard
+    private function generateKeyboard(): Keyboard
     {
         $inlineKeyboard = [];
-        $cities = $this->dotsService->getCities();
-        foreach ($cities['items'] as $city) {
-            $inlineKeyboard[] = [
-                'text' => $city['name'],
-                'callback_data' => 'city_' . $city['id']
-            ];
-        }
-        $inlineKeyboard = array_chunk($inlineKeyboard, 2);
-        $inlineKeyboard[] = [['text' => 'Decline', 'callback_data' => '/decline']];
+        $inlineKeyboard[] = [
+            ['text' => 'Back to main menu', 'callback_data' => '/decline'],
+        ];
         return new Keyboard([
             'inline_keyboard' => $inlineKeyboard,
             'resize_keyboard' => true,
             'one_time_keyboard' => true
         ]);
-
     }
-
 }
