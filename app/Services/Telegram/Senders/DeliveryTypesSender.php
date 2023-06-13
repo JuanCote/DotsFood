@@ -6,6 +6,7 @@ namespace App\Services\Telegram\Senders;
 use App\Models\User;
 use App\Services\Dots\DotsService;
 use App\Services\Orders\OrdersService;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;
@@ -23,6 +24,7 @@ class DeliveryTypesSender
     public function handle(Message $message, User $user)
     {
         $deliveryTypes = $this->dotsService->getDeliveryTypes($user->order->company_id);
+        Log::info($deliveryTypes);
         $keyboard = $this->generateDeliveryTypesKeyboard($deliveryTypes);
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,

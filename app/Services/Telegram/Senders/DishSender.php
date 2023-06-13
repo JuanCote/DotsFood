@@ -4,6 +4,7 @@ namespace App\Services\Telegram\Senders;
 
 use App\Models\User;
 use App\Services\Dots\DotsService;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;
@@ -37,13 +38,13 @@ class DishSender
             if ($category['id'] === $categoryId){
                 foreach ($category['items'] as $dish) {
                     $inlineKeyboard[] = [
-                        'text' => $dish['name'],
+                        'text' => "{$dish['name']} - {$dish['price']}₴",
                         'callback_data' => 'dish_' . $dish['id']
                     ];
                 }
             }
         }
-        $inlineKeyboard = array_chunk($inlineKeyboard, 2);
+        $inlineKeyboard = array_chunk($inlineKeyboard, 1);
         $inlineKeyboard[] = [
             ['text' => 'Decline', 'callback_data' => '/decline'],
             ['text' => 'Categories', 'callback_data' => 'company_' . $companyId],

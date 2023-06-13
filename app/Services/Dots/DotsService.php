@@ -94,8 +94,12 @@ class DotsService
     {
         return $this->dotsProvider->userStatByPhone($phoneNumber);
     }
-    public function UserActiveOrders(string $dotsUserId): array
+    public function userActiveOrders(string $dotsUserId): array
     {
-        return $this->dotsProvider->UserActiveOrders($dotsUserId);
+        return $this->dotsProvider->userActiveOrders($dotsUserId);
+    }
+    public function userHistoryOrders(string $dotsUserId): array
+    {
+        return $this->dotsProvider->userHistoryOrders($dotsUserId);
     }
 }

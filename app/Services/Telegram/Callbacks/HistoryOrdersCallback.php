@@ -8,13 +8,14 @@ use App\Services\Orders\OrdersService;
 use App\Services\Telegram\Senders\ActiveOrdersSender;
 use App\Services\Telegram\Senders\CategorySender;
 use App\Services\Telegram\Senders\DishSender;
+use App\Services\Telegram\Senders\HistoryOrdersSender;
 use App\Services\Users\UsersService;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\CallbackQuery;
 
 
-class ActiveOrdersCallback
+class HistoryOrdersCallback
 {
 
     private $userService;
@@ -33,7 +34,7 @@ class ActiveOrdersCallback
     {
         $telegramId = $callbackQuery->message->chat->id;
         $user = $this->userService->findUserByTelegramId($telegramId);
-        $activeOrders = $this->dotsService->userActiveOrders($user->dotsUserId);
-        app(ActiveOrdersSender::class)->handle($callbackQuery->message, $activeOrders);
+        $historyOrders = $this->dotsService->userHistoryOrders($user->dotsUserId);
+        app(HistoryOrdersSender::class)->handle($callbackQuery->message, $historyOrders);
     }
 }

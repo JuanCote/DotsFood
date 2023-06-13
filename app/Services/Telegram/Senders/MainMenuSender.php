@@ -33,7 +33,7 @@ class MainMenuSender
         $telegramId = $message->chat->id;
         $this->clearOrder($telegramId);
         $keyboard = $this->generateMainKeyboard();
-        $text = "Hello, with the help of this bot you can order food all over Ukraine";
+        $text = "Hi, with the help of this bot you can order food all over Ukraine 🚚";
         if ($edit){
             Telegram::editMessageText([
                 'chat_id' => $telegramId,
@@ -51,10 +51,11 @@ class MainMenuSender
     }
     private function generateMainKeyboard(): Keyboard
     {
-        $inlineKeyboard = [[
-            ['text' => 'Create new order', 'callback_data' => 'create_order'],
-            ['text' => 'View active orders', 'callback_data' => 'active_orders'],
-        ]];
+        $inlineKeyboard = [
+            [['text' => '➕ Create new order', 'callback_data' => 'create_order']],
+            [['text' => '👀 View active orders', 'callback_data' => 'active_orders']],
+            [['text' => '📜 Order history', 'callback_data' => 'history_orders']],
+        ];
         return new Keyboard([
             'inline_keyboard' => $inlineKeyboard,
             'resize_keyboard' => true,

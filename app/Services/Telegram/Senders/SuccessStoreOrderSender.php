@@ -22,7 +22,7 @@ class SuccessStoreOrderSender
     }
     public function handle(Message $message, array $orderResult)
     {
-        if (array_key_exists('title', $orderResult) and $orderResult['title'] === 'Oops...'){
+        if (!array_key_exists('id', $orderResult)){
             $checkOrder = false;
             $text = 'Something went wrong  😞';
             $text .= "\n{$orderResult['message']}";

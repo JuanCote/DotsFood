@@ -59,8 +59,12 @@ class DotsProvider extends HttpClient
     {
         return $this->get("api/v2/users/statistics-by-phone?phone=$phoneNumber&v=2.0.0");
     }
-    public function UserActiveOrders(string $dotsUserId): array
+    public function userActiveOrders(string $dotsUserId): array
     {
         return $this->get("api/v2/users/$dotsUserId/orders/active?v=2.0.0");
+    }
+    public function userHistoryOrders(string $dotsUserId): array
+    {
+        return $this->get("api/v2/users/$dotsUserId/orders/history?v=2.0.0");
     }
 }

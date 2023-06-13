@@ -13,7 +13,7 @@ use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;
 
-class ActiveOrdersSender
+class HistoryOrdersSender
 {
     private $dotsService;
     private $userService;
@@ -29,22 +29,21 @@ class ActiveOrdersSender
         $this->ordersService = $ordersService;
     }
 
-    public function handle(Message $message, array $activeOrders)
+    public function handle(Message $message, array $historyOrders)
     {
         $keyboard = $this->generateKeyboard();
         $telegramId = $message->chat->id;
-        if (empty($activeOrders["items"])){
-            $text = "You don't have any active orders 🤷‍♂️";
+        if (empty($historyOrders["items"])){
+            $text = "You don't have any orders in your history🤷‍♂️";
         }else{
-            $text = "Your active orders:\n------------------------------\n";
-            foreach ($activeOrders["items"] as $order){
+            $text = "Your orders history:\n------------------------------\n";
+            foreach ($historyOrders["items"] as $order){
+                $creationTime = date('Y-m-d H:i:s', $order['createTime']);
                 $text .= "The company name - {$order['companyName']}\n";
-                $text .= "Payment - {$order['paymentText']}\n";
-                $text .= "Status - {$order['status']['text']}\n";
+                $text .= "Creation time - $creationTime\n";
                 $text .= "------------------------------\n";
             }
         }
-
         Telegram::editMessageText([
             'chat_id' => $telegramId,
             'message_id' => $message->message_id,

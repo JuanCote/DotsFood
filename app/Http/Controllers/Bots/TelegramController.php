@@ -11,6 +11,7 @@ use App\Services\Telegram\Callbacks\CityCallback;
 use App\Services\Telegram\Callbacks\CompanyAddressCallback;
 use App\Services\Telegram\Callbacks\CompanyCallback;
 use App\Services\Telegram\Callbacks\CreateNewOrderCallback;
+use App\Services\Telegram\Callbacks\HistoryOrdersCallback;
 use App\Services\Telegram\Callbacks\MainMenuCallback;
 use App\Services\Telegram\Callbacks\DeclineCallback;
 use App\Services\Telegram\Callbacks\DeliveryCallback;
@@ -63,6 +64,8 @@ class TelegramController extends Controller
                     app(CreateNewOrderCallback::class)->handle($callback_query);
                 }elseif ($data === 'active_orders') {
                     app(ActiveOrdersCallback::class)->handle($callback_query);
+                }elseif ($data === 'history_orders') {
+                    app(HistoryOrdersCallback::class)->handle($callback_query);
                 }elseif (str_starts_with($data, 'check_order_')) {
                     app(CheckOrderCallback::class)->handle($callback_query);
                 } elseif (str_starts_with($data, 'delivery_type_')) {
