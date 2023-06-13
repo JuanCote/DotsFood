@@ -31,6 +31,7 @@ class ActiveOrdersSender
 
     public function handle(Message $message, array $activeOrders)
     {
+        Log::info($activeOrders);
         $keyboard = $this->generateKeyboard();
         $telegramId = $message->chat->id;
         if (empty($activeOrders["items"])){
