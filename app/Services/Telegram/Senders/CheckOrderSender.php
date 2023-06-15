@@ -22,11 +22,16 @@ class CheckOrderSender
     }
     public function handle(Message $message, array $order_info)
     {
-        $text = "The company name - {$order_info['companyName']}\n
+        Log::info($order_info);
+        if (empty($order_info)){
+            $text = "Something went wrong 😞";
+        }else{
+            $text = "The company name - {$order_info['companyName']}\n
 Type of delivery - {$order_info['delivery']['deliveryTypeText']}\n
 Address of the institution - {$order_info['delivery']['deliveryAddress']}\n
 Payment type - {$order_info['payment']['title']}\n
 Total price - {$order_info['prices']['fullPrice']}";
+        }
         $keyboard = $this->generateKeyboard();
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Bots;
 
 use App\Http\Controllers\Controller;
 use App\Services\Telegram\Callbacks\ActiveOrdersCallback;
+use App\Services\Telegram\Callbacks\AddAddressCallback;
 use App\Services\Telegram\Callbacks\CategoryCallback;
 use App\Services\Telegram\Callbacks\CheckOrderCallback;
 use App\Services\Telegram\Callbacks\CityCallback;
@@ -66,7 +67,9 @@ class TelegramController extends Controller
                     app(ActiveOrdersCallback::class)->handle($callback_query);
                 }elseif ($data === 'history_orders') {
                     app(HistoryOrdersCallback::class)->handle($callback_query);
-                }elseif (str_starts_with($data, 'check_order_')) {
+                }elseif ($data === 'add_address') {
+                    app(AddAddressCallback::class)->handle($callback_query);
+            }elseif (str_starts_with($data, 'check_order_')) {
                     app(CheckOrderCallback::class)->handle($callback_query);
                 } elseif (str_starts_with($data, 'delivery_type_')) {
                     app(DeliveryTypeCallback::class)->handle($callback_query);

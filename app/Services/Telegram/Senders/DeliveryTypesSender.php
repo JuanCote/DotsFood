@@ -24,7 +24,6 @@ class DeliveryTypesSender
     public function handle(Message $message, User $user)
     {
         $deliveryTypes = $this->dotsService->getDeliveryTypes($user->order->company_id);
-        Log::info($deliveryTypes);
         $keyboard = $this->generateDeliveryTypesKeyboard($deliveryTypes);
         Telegram::editMessageText([
             'chat_id' => $message->chat->id,

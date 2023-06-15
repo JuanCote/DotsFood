@@ -10,6 +10,7 @@ namespace App\Services\Dots\Providers;
 
 use App\Services\Http\HttpClient;
 use Illuminate\Support\Facades\Log;
+use function PHPUnit\Framework\isNull;
 use function Symfony\Component\ErrorHandler\Tests\testHeader;
 
 class DotsProvider extends HttpClient
@@ -49,7 +50,12 @@ class DotsProvider extends HttpClient
     }
     public function checkOrder(string $orderId): array
     {
-        return $this->get("api/v2/orders/$orderId?v=2.0.0");
+        $respond = $this->get("api/v2/orders/$orderId?v=2.0.0");
+        Log::info($respond);
+        if (is_null($respond)){
+            return [];
+        }
+        return $respond;
     }
     public function resolveCart(array $orderObject): array
     {

@@ -55,6 +55,7 @@ class MainMenuSender
             [['text' => '➕ Create new order', 'callback_data' => 'create_order']],
             [['text' => '👀 View active orders', 'callback_data' => 'active_orders']],
             [['text' => '📜 Order history', 'callback_data' => 'history_orders']],
+            [['text' => '🏠 Add address', 'callback_data' => 'add_address']],
         ];
         return new Keyboard([
             'inline_keyboard' => $inlineKeyboard,
