@@ -4,29 +4,29 @@
 namespace App\Http\Controllers\Bots;
 
 use App\Http\Controllers\Controller;
-use App\Services\Telegram\Callbacks\ActiveOrdersCallback;
-use App\Services\Telegram\Callbacks\AddAddressCallback;
-use App\Services\Telegram\Callbacks\CategoryCallback;
-use App\Services\Telegram\Callbacks\CheckOrderCallback;
-use App\Services\Telegram\Callbacks\CityCallback;
-use App\Services\Telegram\Callbacks\CompanyAddressCallback;
-use App\Services\Telegram\Callbacks\CompanyCallback;
-use App\Services\Telegram\Callbacks\CreateNewOrderCallback;
-use App\Services\Telegram\Callbacks\HistoryOrdersCallback;
-use App\Services\Telegram\Callbacks\MainMenuCallback;
-use App\Services\Telegram\Callbacks\DeclineCallback;
-use App\Services\Telegram\Callbacks\DeliveryCallback;
-use App\Services\Telegram\Callbacks\DeliveryTypeCallback;
-use App\Services\Telegram\Callbacks\DishCallback;
-use App\Services\Telegram\Callbacks\OrderAgreeCallback;
-use App\Services\Telegram\Callbacks\PaymentTypeCallback;
-use App\Services\Telegram\Commands\StartCommand;
-use App\Services\Telegram\Handlers\Commands\StartCommandHandler;
-use App\Services\Telegram\Handlers\ReceiveContact;
+use App\Services\Telegram\Callbacks\Addresses\AddAddressCallback;
+use App\Services\Telegram\Callbacks\Addresses\CityAddressCallback;
+use App\Services\Telegram\Callbacks\Addresses\StartAddAddressCallback;
+use App\Services\Telegram\Callbacks\Addresses\TypeAddressCallback;
+use App\Services\Telegram\Callbacks\CreateOrder\CategoryCallback;
+use App\Services\Telegram\Callbacks\CreateOrder\CheckOrderCallback;
+use App\Services\Telegram\Callbacks\CreateOrder\CityCallback;
+use App\Services\Telegram\Callbacks\CreateOrder\CompanyAddressCallback;
+use App\Services\Telegram\Callbacks\CreateOrder\CompanyCallback;
+use App\Services\Telegram\Callbacks\CreateOrder\CreateNewOrderCallback;
+use App\Services\Telegram\Callbacks\CreateOrder\DeliveryCallback;
+use App\Services\Telegram\Callbacks\CreateOrder\DeliveryTypeCallback;
+use App\Services\Telegram\Callbacks\CreateOrder\DishCallback;
+use App\Services\Telegram\Callbacks\CreateOrder\OrderAgreeCallback;
+use App\Services\Telegram\Callbacks\CreateOrder\PaymentTypeCallback;
+use App\Services\Telegram\Callbacks\MainMenu\ActiveOrdersCallback;
+use App\Services\Telegram\Callbacks\MainMenu\HistoryOrdersCallback;
+use App\Services\Telegram\Callbacks\MainMenu\MainMenuCallback;
+use App\Services\Telegram\Handlers\MessageHandler;
+use App\Services\Telegram\Handlers\ReceiveContactHandler;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
-use Telegram\Bot\Laravel\Facades\Telegram;
-use function Symfony\Component\Translation\t;
+
 
 class TelegramController extends Controller
 {
@@ -50,7 +50,7 @@ class TelegramController extends Controller
                 }elseif (str_starts_with($data, 'company_')){
                     app(CompanyCallback::class)->handle($callback_query);
                 }elseif (str_starts_with($data, '/decline')){
-                    app(DeclineCallback::class)->handle($callback_query);
+                    app(MainMenuCallback::class)->handle($callback_query);
                 }elseif (str_starts_with($data, 'category_')) {
                     app(CategoryCallback::class)->handle($callback_query);
                 }elseif (str_starts_with($data, 'dish_')){
@@ -69,7 +69,9 @@ class TelegramController extends Controller
                     app(HistoryOrdersCallback::class)->handle($callback_query);
                 }elseif ($data === 'add_address') {
                     app(AddAddressCallback::class)->handle($callback_query);
-            }elseif (str_starts_with($data, 'check_order_')) {
+                }elseif ($data === 'add_address_start') {
+                    app(StartAddAddressCallback::class)->handle($callback_query);
+                }elseif (str_starts_with($data, 'check_order_')) {
                     app(CheckOrderCallback::class)->handle($callback_query);
                 } elseif (str_starts_with($data, 'delivery_type_')) {
                     app(DeliveryTypeCallback::class)->handle($callback_query);
@@ -77,10 +79,16 @@ class TelegramController extends Controller
                     app(PaymentTypeCallback::class)->handle($callback_query);
                 }elseif (str_starts_with($data, 'companyAddress_')) {
                     app(CompanyAddressCallback::class)->handle($callback_query);
+                }elseif (str_starts_with($data, 'address_city_')) {
+                    app(CityAddressCallback::class)->handle($callback_query);
+                }elseif (str_starts_with($data, 'type_address_')) {
+                    app(TypeAddressCallback::class)->handle($callback_query);
                 }
                 // Checking if update is an incoming contact after receiving
             }elseif (isset($update->getMessage()->contact)){
-                app(ReceiveContact::class)->handle($update);
+                app(ReceiveContactHandler::class)->handle($update);
+            }else{
+                app(MessageHandler::class)->handle($update);
             }
         }
         $this->telegram->commandsHandler(true);

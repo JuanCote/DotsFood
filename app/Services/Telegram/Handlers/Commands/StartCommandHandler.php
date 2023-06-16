@@ -3,13 +3,10 @@
 namespace App\Services\Telegram\Handlers\Commands;
 
 
-use App\Models\User;
+use App\Services\AddressesStates\AddressStateService;
 use App\Services\Dots\DotsService;
-use App\Services\Telegram\Callbacks\CityCallback;
-use App\Services\Telegram\Senders\CitySender;
-use App\Services\Telegram\Senders\MainMenuSender;
+use App\Services\Telegram\Senders\MainMenu\MainMenuSender;
 use App\Services\Users\UsersService;
-use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Commands\Command;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
@@ -24,9 +21,11 @@ class StartCommandHandler
     public function __construct(
         DotsService   $dotsService,
         UsersService $userService,
+        AddressStateService $addressStateService
     ) {
         $this->dotsService = $dotsService;
         $this->userService = $userService;
+        $this->addressStateService = $addressStateService;
     }
 
     public function handle(Command $command)
@@ -65,7 +64,8 @@ class StartCommandHandler
                 'name' => $message->chat->first_name,
                 'telegram_id' => $telegramId
             ];
-            $this->userService->createUser($data);
+            $user = $this->userService->createUser($data);
+            $addressState = $this->addressStateService->createAddressState(['user_id' => $user->id]);
             return false;
         }else{
             if ($user->phone !== null){

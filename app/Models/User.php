@@ -44,4 +44,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Order::class);
     }
+    public function addressState()
+    {
+        return $this->hasOne(AddressState::class);
+    }
 }
