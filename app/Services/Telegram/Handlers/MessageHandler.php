@@ -10,6 +10,7 @@ use App\Services\Telegram\Handlers\Messages\NoteHandler;
 use App\Services\Telegram\Handlers\Messages\StageHandler;
 use App\Services\Telegram\Handlers\Messages\StreetHandler;
 use App\Services\Users\UsersService;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Objects\Update;
 
 // Сlass intercepting all messages written by the user in the chat

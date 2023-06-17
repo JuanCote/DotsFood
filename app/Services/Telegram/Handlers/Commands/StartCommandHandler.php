@@ -7,6 +7,7 @@ use App\Services\AddressesStates\AddressStateService;
 use App\Services\Dots\DotsService;
 use App\Services\Telegram\Senders\MainMenu\MainMenuSender;
 use App\Services\Users\UsersService;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Commands\Command;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
