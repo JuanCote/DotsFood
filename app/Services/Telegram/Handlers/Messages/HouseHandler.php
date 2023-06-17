@@ -8,6 +8,7 @@ use App\Services\Dots\DotsService;
 use App\Services\Orders\OrdersService;
 use App\Services\Telegram\Senders\Addresses\FlatAddressSender;
 use App\Services\Telegram\Senders\Addresses\HouseAddressSender;
+use App\Services\Telegram\Senders\Addresses\NoteAddressSender;
 use App\Services\Telegram\Senders\MainMenu\MainMenuSender;
 use App\Services\Users\UsersService;
 use Illuminate\Support\Facades\Log;
@@ -33,7 +34,7 @@ class HouseHandler
     {
         $house = $update->getMessage()->text;
         $type = $user->addressState->type;
-        // A check to determine whether further inquiry for the house number is needed.
+        // A check to determine whether further inquiry for the flat number is needed.
         if (in_array($type, [0,2])){
             $state = 'flat';
         }else{
@@ -42,6 +43,8 @@ class HouseHandler
         $this->addHouseToAddressState($house, $user, $state);
         if ($state === 'flat'){
             app(FlatAddressSender::class)->handle($update->getMessage());
+        }else{
+            app(NoteAddressSender::class)->handle($update->getMessage());
         }
     }
     private function addHouseToAddressState(string $house, User $user, string $state)

@@ -7,6 +7,7 @@ use App\Services\AddressesStates\AddressStateService;
 use App\Services\Dots\DotsService;
 use App\Services\Orders\OrdersService;
 use App\Services\Telegram\Senders\Addresses\HouseAddressSender;
+use App\Services\Telegram\Senders\Addresses\NoteAddressSender;
 use App\Services\Telegram\Senders\MainMenu\MainMenuSender;
 use App\Services\Users\UsersService;
 use Illuminate\Support\Facades\Log;
@@ -41,6 +42,8 @@ class StreetHandler
         $this->addStreetToAddressState($street, $user, $state);
         if ($state === 'house'){
             app(HouseAddressSender::class)->handle($update->getMessage());
+        }else{
+            app(NoteAddressSender::class)->handle($update->getMessage());
         }
     }
     private function addStreetToAddressState(string $street, User $user, string $state)

@@ -18,8 +18,6 @@ class HouseAddressSender
     {
         $telegramId = $message->chat->id;
 
-
-
         $text = "Now write the house number";
 
         $keyboard = $this->generateKeyboard();

@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\Update;
 
-// Сlass for processing a message with a flat.
-class FlatHandler
+// Сlass for processing a message with a stage.
+class StageHandler
 {
     public function __construct(
         DotsService   $dotsService,
@@ -32,25 +32,15 @@ class FlatHandler
 
     public function handle(Update $update, User $user)
     {
-        $flat = $update->getMessage()->text;
-        $type = $user->addressState->type;
-        // A check to determine whether further inquiry for the floor number is needed.
-        if ($type == 0){
-            $state = 'stage';
-        }else{
-            $state = 'note';
-        }
-        $this->addFlatToAddressState($flat, $user, $state);
-        if ($state === 'stage'){
-            app(StageAddressSender::class)->handle($update->getMessage());
-        }else{
-            app(NoteAddressSender::class)->handle($update->getMessage());
-        }
+        $stage = $update->getMessage()->text;
+        $state = 'note';
+        $this->addStageToAddressState($stage, $user, $state);
+        app(NoteAddressSender::class)->handle($update->getMessage());
     }
-    private function addFlatToAddressState(string $flat, User $user, string $state)
+    private function addStageToAddressState(string $stage, User $user, string $state)
     {
         $this->addressStateService->updateAddressState($user->addressState, [
-            'flat' => $flat,
+            'stage' => $stage,
             'state' => $state
         ]);
     }

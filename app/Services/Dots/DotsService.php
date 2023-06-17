@@ -102,4 +102,13 @@ class DotsService
     {
         return $this->dotsProvider->userHistoryOrders($dotsUserId);
     }
+    public function validateUserAddress(array $addressObject): array
+    {
+        return $this->dotsProvider->validateUserAddress($addressObject);
+    }
+    public function storeUserAddress(array $addressObject): array
+    {
+        return $this->dotsProvider->storeUserAddress($addressObject);
+    }
+
 }

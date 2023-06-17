@@ -73,4 +73,11 @@ class DotsProvider extends HttpClient
     {
         return $this->get("api/v2/users/$dotsUserId/orders/history?v=2.0.0");
     }
+    public function validateUserAddress(array $addressObject): array
+    {
+        return $this->post("api/v2/user-addresses/validate?v=2.0.0", $addressObject);
+    }
+    public function storeUserAddress(array $addressObject): array{
+        return $this->post("api/v2/user-addresses?v=2.0.0", $addressObject);
+    }
 }

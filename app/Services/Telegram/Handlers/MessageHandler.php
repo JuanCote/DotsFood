@@ -6,6 +6,8 @@ use App\Services\Dots\DotsService;
 use App\Services\Orders\OrdersService;
 use App\Services\Telegram\Handlers\Messages\FlatHandler;
 use App\Services\Telegram\Handlers\Messages\HouseHandler;
+use App\Services\Telegram\Handlers\Messages\NoteHandler;
+use App\Services\Telegram\Handlers\Messages\StageHandler;
 use App\Services\Telegram\Handlers\Messages\StreetHandler;
 use App\Services\Users\UsersService;
 use Telegram\Bot\Objects\Update;
@@ -36,6 +38,10 @@ class MessageHandler
                 app(HouseHandler::class)->handle($update, $user);
             }elseif ($state === 'flat') {
                 app(FlatHandler::class)->handle($update, $user);
+            }elseif ($state === 'stage') {
+                app(StageHandler::class)->handle($update, $user);
+            }elseif ($state === 'note') {
+                app(NoteHandler::class)->handle($update, $user);
             }
         }
     }

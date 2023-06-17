@@ -12,13 +12,13 @@ use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Message;
 
-class FlatAddressSender
+class StageAddressSender
 {
     public function handle(Message $message)
     {
         $telegramId = $message->chat->id;
 
-        $text = "Now enter the apartment number";
+        $text = "Now enter the floor";
 
         $keyboard = $this->generateKeyboard();
 
