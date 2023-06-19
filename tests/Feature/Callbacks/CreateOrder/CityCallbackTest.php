@@ -1,27 +1,20 @@
 <?php
 
-namespace Tests\Feature\CreateOrder;
+namespace Tests\Feature\Callbacks\CreateOrder;
 
 
 use App\Models\Order;
 use App\Models\User;
 use App\Services\Orders\OrdersService;
-use App\Services\Telegram\Callbacks\CreateOrder\CategoryCallback;
 use App\Services\Telegram\Callbacks\CreateOrder\CityCallback;
-use App\Services\Telegram\Callbacks\CreateOrder\CompanyCallback;
-use App\Services\Telegram\Callbacks\CreateOrder\CreateNewOrderCallback;
-
-use App\Services\Telegram\Senders\CreateOrder\CategorySender;
-use App\Services\Telegram\Senders\CreateOrder\CitySender;
 use App\Services\Telegram\Senders\CreateOrder\CompanySender;
-use App\Services\Telegram\Senders\CreateOrder\DishSender;
 use App\Services\Users\UsersService;
 use Mockery;
 use Telegram\Bot\Objects\CallbackQuery;
 use Telegram\Bot\Objects\Message;
 use Tests\TestCase;
 
-class CategoryCallbackTest extends TestCase
+class CityCallbackTest extends TestCase
 {
     /**
      * A basic test example.
@@ -29,8 +22,9 @@ class CategoryCallbackTest extends TestCase
     public function testCityCallbackHandle(): void
     {
         $usersServiceMock = Mockery::mock(UsersService::class);
+        $ordersServiceMock = Mockery::mock(OrdersService::class);
 
-        $categoryCallback = new CategoryCallback($usersServiceMock);
+        $cityCallback = new CityCallback($usersServiceMock, $ordersServiceMock);
 
         $messageData = [
             'message_id' => 928,
@@ -51,16 +45,19 @@ class CategoryCallbackTest extends TestCase
         ];
 
         $message = new Message($messageData);
-        $callbackQuery = new CallbackQuery(['data' => 'category_123213', 'message' => $message]);
+        $callbackQuery = new CallbackQuery(['data' => 'city_12123123132', 'message' => $message]);
 
         $user = new User();
+        $user->order = new Order();
 
         $usersServiceMock->shouldReceive('findUserByTelegramId')->with($message->chat->id)->andReturn($user);
 
-        $dishSenderMock = Mockery::mock(DishSender::class);
-        $dishSenderMock->shouldReceive('handle')->once()->andReturn();
-        app()->instance(DishSender::class, $dishSenderMock);
+        $ordersServiceMock->shouldReceive('updateOrder')->once()->andReturn();
 
-        $categoryCallback->handle($callbackQuery);
+        $companySenderMock = Mockery::mock(CompanySender::class);
+        $companySenderMock->shouldReceive('handle')->once()->andReturn();
+        app()->instance(CompanySender::class, $companySenderMock);
+
+        $cityCallback->handle($callbackQuery);
     }
 }

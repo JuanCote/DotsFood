@@ -1,35 +1,33 @@
 <?php
 
-namespace Tests\Feature\CreateOrder;
+namespace Tests\Feature\Callbacks\CreateOrder;
 
 
 use App\Models\Order;
 use App\Models\User;
+use App\Services\Dots\DotsService;
 use App\Services\Orders\OrdersService;
 use App\Services\Telegram\Callbacks\CreateOrder\CityCallback;
-use App\Services\Telegram\Callbacks\CreateOrder\CompanyCallback;
-use App\Services\Telegram\Callbacks\CreateOrder\CreateNewOrderCallback;
-
-use App\Services\Telegram\Senders\CreateOrder\CategorySender;
-use App\Services\Telegram\Senders\CreateOrder\CitySender;
+use App\Services\Telegram\Callbacks\MainMenu\ActiveOrdersCallback;
 use App\Services\Telegram\Senders\CreateOrder\CompanySender;
+use App\Services\Telegram\Senders\MainMenu\ActiveOrdersSender;
 use App\Services\Users\UsersService;
 use Mockery;
 use Telegram\Bot\Objects\CallbackQuery;
 use Telegram\Bot\Objects\Message;
 use Tests\TestCase;
 
-class CompanyCallbackTest extends TestCase
+class ActiveOrdersCallbackTest extends TestCase
 {
     /**
      * A basic test example.
      */
-    public function testCityCallbackHandle(): void
+    public function testActiveOrdersCallbackHandle(): void
     {
         $usersServiceMock = Mockery::mock(UsersService::class);
-        $ordersServiceMock = Mockery::mock(OrdersService::class);
+        $dotsServiceMock = Mockery::mock(DotsService::class);
 
-        $companyCallback = new CompanyCallback($usersServiceMock, $ordersServiceMock);
+        $activeOrdersCallback = new ActiveOrdersCallback($usersServiceMock, $dotsServiceMock);
 
         $messageData = [
             'message_id' => 928,
@@ -50,19 +48,19 @@ class CompanyCallbackTest extends TestCase
         ];
 
         $message = new Message($messageData);
-        $callbackQuery = new CallbackQuery(['data' => 'company_asda123-123123asd', 'message' => $message]);
+        $callbackQuery = new CallbackQuery(['data' => 'city_12123123132', 'message' => $message]);
 
         $user = new User();
-        $user->order = new Order();
+        $user->dotsUserId = 'qa1asd';
 
         $usersServiceMock->shouldReceive('findUserByTelegramId')->with($message->chat->id)->andReturn($user);
 
-        $ordersServiceMock->shouldReceive('updateOrder')->once()->andReturn();
+        $dotsServiceMock->shouldReceive('userActiveOrders')->once()->andReturn([]);
 
-        $categorySenderMock = Mockery::mock(CategorySender::class);
-        $categorySenderMock->shouldReceive('handle')->once()->andReturn();
-        app()->instance(CategorySender::class, $categorySenderMock);
+        $activeOrdersSenderMock = Mockery::mock(ActiveOrdersSender::class);
+        $activeOrdersSenderMock->shouldReceive('handle')->once()->andReturn();
+        app()->instance(ActiveOrdersSender::class, $activeOrdersSenderMock);
 
-        $companyCallback->handle($callbackQuery);
+        $activeOrdersCallback->handle($callbackQuery);
     }
 }

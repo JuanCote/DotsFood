@@ -13,23 +13,14 @@ use function Symfony\Component\Translation\t;
 
 class AddAddressCallback
 {
-
-    private $userService;
-    private $orderService;
-    private $dotsService;
     public function __construct(
         UsersService $userService,
-        OrdersService $orderService,
-        DotsService $dotsService,
     ) {
         $this->userService = $userService;
-        $this->orderService = $orderService;
-        $this->dotsService = $dotsService;
     }
     public function handle(CallbackQuery $callbackQuery)
     {
         $telegramId = $callbackQuery->message->chat->id;
-        $user = $this->userService->findUserByTelegramId($telegramId);
         $hasAddress = $this->checkAddress($telegramId);
         app(AddAddressSender::class)->handle($callbackQuery->message, $hasAddress);
     }

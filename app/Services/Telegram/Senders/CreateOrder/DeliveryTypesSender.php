@@ -42,7 +42,7 @@ class DeliveryTypesSender
         }
         $inlineKeyboard = array_chunk($inlineKeyboard, 2);
         $inlineKeyboard[] = [['text' => 'Decline', 'callback_data' => '/decline']];
-        return $reply_markup = new Keyboard([
+        return new Keyboard([
             'inline_keyboard' => $inlineKeyboard,
             'resize_keyboard' => true,
             'one_time_keyboard' => true

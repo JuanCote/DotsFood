@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\Feature\CreateOrder;
+namespace Tests\Feature\Callbacks\CreateOrder;
 
 
 use App\Services\Telegram\Callbacks\CreateOrder\CreateNewOrderCallback;
-
 use App\Services\Telegram\Senders\CreateOrder\CitySender;
 use Mockery;
 use Telegram\Bot\Objects\CallbackQuery;

@@ -13,18 +13,12 @@ use Telegram\Bot\Objects\CallbackQuery;
 
 class DeliveryTypeCallback
 {
-
-    private $userService;
-    private $orderService;
-    private $dotsService;
     public function __construct(
         UsersService $userService,
         OrdersService $orderService,
-        DotsService $dotsService,
     ) {
         $this->userService = $userService;
         $this->orderService = $orderService;
-        $this->dotsService = $dotsService;
     }
     public function handle(CallbackQuery $callbackQuery)
     {

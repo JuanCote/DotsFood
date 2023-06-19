@@ -13,14 +13,10 @@ use Telegram\Bot\Objects\Update;
 // Class for getting a contact and adding a phone to the database
 class ReceiveContactHandler
 {
-
-    private $dotsService;
-    private $userService;
-    private $orderService;
     public function __construct(
-        DotsService   $dotsService,
         UsersService $userService,
-        OrdersService $orderService
+        OrdersService $orderService,
+        DotsService   $dotsService,
     ) {
         $this->dotsService = $dotsService;
         $this->userService = $userService;
@@ -30,7 +26,7 @@ class ReceiveContactHandler
     public function handle(Update $update)
     {
         $message = $update->getMessage();
-        $telegramId = $message->from->id;
+        $telegramId = $message->chat->id;
         $user = $this->userService->findUserByTelegramId($telegramId);
         $this->addPhoneToUser($user, $message);
         if (!$user->order){

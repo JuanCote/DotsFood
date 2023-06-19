@@ -16,8 +16,6 @@ use function Symfony\Component\Translation\t;
 
 class CityAddressCallback
 {
-
-    private $userService;
     public function __construct(
         UsersService $userService,
         AddressStateService $addressStateService

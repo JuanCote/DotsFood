@@ -14,18 +14,10 @@ use Telegram\Bot\Objects\Message;
 
 class CityAddressSender
 {
-    private $dotsService;
-    private $userService;
-    private $ordersService;
-
     public function __construct(
-        OrdersService $ordersService,
         DotsService $dotsService,
-        UsersService $usersService,
     ) {
         $this->dotsService = $dotsService;
-        $this->userService = $usersService;
-        $this->ordersService = $ordersService;
     }
 
     public function handle(Message $message)

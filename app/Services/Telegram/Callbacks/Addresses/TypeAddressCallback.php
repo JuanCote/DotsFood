@@ -16,9 +16,6 @@ use function Symfony\Component\Translation\t;
 
 class TypeAddressCallback
 {
-
-    private $userService;
-
     public function __construct(
         UsersService $userService,
         AddressStateService $addressStateService

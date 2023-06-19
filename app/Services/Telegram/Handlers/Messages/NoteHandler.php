@@ -21,12 +21,10 @@ class NoteHandler
     public function __construct(
         DotsService   $dotsService,
         UsersService $userService,
-        OrdersService $orderService,
         AddressStateService $addressStateService
     ) {
         $this->dotsService = $dotsService;
         $this->userService = $userService;
-        $this->orderService = $orderService;
         $this->addressStateService = $addressStateService;
     }
 

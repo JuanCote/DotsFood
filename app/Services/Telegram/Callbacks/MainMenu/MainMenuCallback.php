@@ -12,15 +12,6 @@ use Telegram\Bot\Objects\CallbackQuery;
 
 class MainMenuCallback
 {
-    public function __construct(
-        UsersService $userService,
-        OrdersService $orderService,
-        AddressStateService $addressStateService
-    ) {
-        $this->userService = $userService;
-        $this->orderService = $orderService;
-        $this->addressStateService = $addressStateService;
-    }
     public function handle(CallbackQuery $callbackQuery)
     {
         $message = $callbackQuery->message;

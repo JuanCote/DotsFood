@@ -11,17 +11,11 @@ use Telegram\Bot\Objects\CallbackQuery;
 
 class OrderAgreeCallback
 {
-
-    private $userService;
-    private $orderService;
-    private $dotsService;
     public function __construct(
         UsersService $userService,
-        OrdersService $orderService,
         DotsService $dotsService,
     ) {
         $this->userService = $userService;
-        $this->orderService = $orderService;
         $this->dotsService = $dotsService;
     }
     public function handle(CallbackQuery $callbackQuery)
@@ -36,5 +30,4 @@ class OrderAgreeCallback
         $user = $this->userService->findUserByTelegramId($telegramId);
         return $this->dotsService->createOrder($user);
     }
-
 }
