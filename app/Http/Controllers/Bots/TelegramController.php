@@ -40,6 +40,7 @@ class TelegramController extends Controller
     public function updates()
     {
         $update = $this->telegram->getWebhookUpdate();
+        $this->telegram->commandsHandler(true);
         if (!empty($update)) {
             // Checking if update is a callback or not
             if ($update->callbackQuery) {
@@ -91,7 +92,6 @@ class TelegramController extends Controller
                 app(MessageHandler::class)->handle($update);
             }
         }
-        $this->telegram->commandsHandler(true);
 
         return 'Ok';
     }

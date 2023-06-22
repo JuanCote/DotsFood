@@ -66,7 +66,7 @@ class StartCommandHandler
                 'telegram_id' => $telegramId
             ];
             $user = $this->userService->createUser($data);
-            $addressState = $this->addressStateService->createAddressState(['user_id' => $user->id]);
+            $this->addressStateService->createAddressState(['user_id' => $user->id]);
             return false;
         }else{
             if ($user->phone !== null){
