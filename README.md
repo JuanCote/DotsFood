@@ -1,6 +1,6 @@
-# PhpTelegramBot
+# DotsFood
 
-PhpTelegramBot - telegram bot written with laravel and telegram-bot-sdk https://telegram-bot-sdk.com/. This bot implements the main functions of the telegram bot. Such as sending messages, processing callbacks and commands. The bot communicates with the live api dots platform, simulating the creation of food orders from different parts of Ukraine.
+DotsFood - telegram bot written with laravel and telegram-bot-sdk https://telegram-bot-sdk.com/. This bot implements the main functions of the telegram bot. Such as sending messages, processing callbacks and commands. The bot communicates with the live api dots platform, simulating the creation of food orders from different parts of Ukraine.
 
 
 ## Installation
@@ -8,7 +8,7 @@ PhpTelegramBot - telegram bot written with laravel and telegram-bot-sdk https://
 Clone the repository
 
 ```bash
-  git clone https://github.com/JuanCote/PhpTelegramBot.git
+  git clone https://github.com/JuanCote/DotsFood.git
 ```
 
 Install all the dependencies using composer
